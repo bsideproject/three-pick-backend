@@ -1,19 +1,25 @@
 package com.bside.threepick.domain.security.service;
 
 import com.bside.threepick.domain.security.dto.Token;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class TokenService {
 
+  private final ObjectMapper objectMapper;
   @Value("${security.secret.key}")
   private String secretKey;
 
@@ -64,5 +70,15 @@ public class TokenService {
 
   public String getRole(String token) {
     return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role", String.class);
+  }
+
+  public void responseToken(HttpServletResponse response, Token token) throws IOException {
+    response.addHeader("Auth", token.getAccessToken());
+    response.addHeader("Refresh", token.getRefreshToken());
+    response.setContentType("application/json;charset=UTF-8");
+
+    var writer = response.getWriter();
+    writer.println(objectMapper.writeValueAsString(token));
+    writer.flush();
   }
 }
