@@ -1,6 +1,8 @@
 package com.bside.threepick.domain.account.dto;
 
 import com.bside.threepick.domain.account.entity.Account;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,12 +15,13 @@ public class AccountResponse {
   private String email;
   private String nickName;
   private int timeValue;
-  // TODO: KST로 변경해야됨
-  private long createdDate;
-  private long modifiedDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+  private Instant createdDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+  private Instant modifiedDate;
 
   public static AccountResponse of(Account account) {
     return new AccountResponse(account.getEmail(), account.getNickName(), account.getTimeValue(),
-        account.getCreatedDate().toEpochMilli(), account.getModifiedDate().toEpochMilli());
+        account.getCreatedDate(), account.getModifiedDate());
   }
 }

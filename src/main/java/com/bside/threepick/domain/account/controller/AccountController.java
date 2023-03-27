@@ -1,6 +1,7 @@
 package com.bside.threepick.domain.account.controller;
 
 import com.bside.threepick.domain.account.dto.AccountResponse;
+import com.bside.threepick.domain.account.dto.EmailAuthResponse;
 import com.bside.threepick.domain.account.dto.SignUpRequest;
 import com.bside.threepick.domain.account.dto.TimeValueRequest;
 import com.bside.threepick.domain.account.service.AccountService;
@@ -28,6 +29,18 @@ public class AccountController {
     return ResponseEntity.ok(accountService.findAccountResponseByEmail(email));
   }
 
+  @GetMapping("/{email}/auth")
+  public ResponseEntity sendEmailAuth(@PathVariable String email) {
+    accountService.sendMailForEmailAuth(email);
+    return ResponseEntity.ok()
+        .build();
+  }
+
+  @GetMapping("/{email}/{code}/auth")
+  public ResponseEntity<EmailAuthResponse> emailAuth(@PathVariable String email, @PathVariable String code) {
+    return ResponseEntity.ok(new EmailAuthResponse(accountService.isAuthenticatedEmail(email, code)));
+  }
+
   @PostMapping
   public ResponseEntity<AccountResponse> signup(@Validated @RequestBody SignUpRequest signUpRequest) {
     AccountResponse accountResponse = accountService.signUp(signUpRequest);
@@ -38,6 +51,6 @@ public class AccountController {
   @PutMapping("/time-value")
   public ResponseEntity<AccountResponse> updateTimeValue(@Validated @RequestBody TimeValueRequest timeValueRequest) {
     accountService.updateTimeValue(timeValueRequest);
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(accountService.findAccountResponseByEmail(timeValueRequest.getEmail()));
   }
 }

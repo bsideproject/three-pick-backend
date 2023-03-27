@@ -11,7 +11,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 
-  // TODO: KST 로 INSERT, SELECT 해야됨
   @CreatedDate
   private Instant createdDate;
 

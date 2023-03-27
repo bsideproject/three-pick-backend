@@ -5,11 +5,14 @@ import com.bside.threepick.domain.account.dto.SignUpRequest;
 import com.bside.threepick.domain.account.dto.TimeValueRequest;
 import com.bside.threepick.domain.account.entity.Account;
 import com.bside.threepick.domain.account.entity.SignUpType;
+import com.bside.threepick.domain.account.event.EmailAuthRequestedEvent;
 import com.bside.threepick.domain.account.reposiroty.AccountRepository;
 import com.bside.threepick.exception.AlreadyExistsEmailException;
 import com.bside.threepick.exception.EntityNotFoundException;
 import com.bside.threepick.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,8 @@ public class AccountService {
 
   private final AccountRepository accountRepository;
   private final PasswordEncoder passwordEncoder;
+  private final StringRedisTemplate stringRedisTemplate;
+  private final ApplicationEventPublisher eventPublisher;
 
   public AccountResponse signUp(SignUpRequest signUpRequest) {
     if (accountRepository.findByEmailAndSignUpType(signUpRequest.getEmail(), SignUpType.KAKAO)
@@ -31,6 +36,20 @@ public class AccountService {
     String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
     Account account = accountRepository.save(signUpRequest.createAccount(encodedPassword));
     return AccountResponse.of(account);
+  }
+
+  @Transactional(readOnly = true)
+  public void sendMailForEmailAuth(String email) {
+    if (accountRepository.findByEmail(email)
+        .isPresent()) {
+      throw new AlreadyExistsEmailException("이미 가입 된 이메일이에요. '이메일 로그인' 으로 로그인 해주세요!");
+    }
+    eventPublisher.publishEvent(new EmailAuthRequestedEvent(email));
+  }
+
+  @Transactional(readOnly = true)
+  public boolean isAuthenticatedEmail(String email, String code) {
+    return code.equals(stringRedisTemplate.opsForValue().get(email));
   }
 
   @Transactional(readOnly = true)
