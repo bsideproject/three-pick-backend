@@ -9,15 +9,20 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "account"
+    , indexes = @Index(name = "UK_ACCOUNT_EMAIL", columnList = "email", unique = true)
+)
 public class Account extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "email", unique = true, nullable = false, updatable = false)
+  @Column(name = "email", nullable = false, updatable = false)
   private String email;
 
   @Column(name = "password", nullable = true, updatable = true)

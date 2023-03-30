@@ -30,8 +30,8 @@ public class AccountController {
   }
 
   @GetMapping("/{email}/auth")
-  public ResponseEntity sendEmailAuth(@PathVariable String email) {
-    accountService.sendMailForEmailAuth(email);
+  public ResponseEntity sendEmailAuthCode(@PathVariable String email) {
+    accountService.sendEmailAuthCode(email);
     return ResponseEntity.ok()
         .build();
   }

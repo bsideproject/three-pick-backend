@@ -39,7 +39,7 @@ public class AccountService {
   }
 
   @Transactional(readOnly = true)
-  public void sendMailForEmailAuth(String email) {
+  public void sendEmailAuthCode(String email) {
     if (accountRepository.findByEmail(email)
         .isPresent()) {
       throw new AlreadyExistsEmailException("이미 가입 된 이메일이에요. '이메일 로그인' 으로 로그인 해주세요!");
@@ -55,14 +55,14 @@ public class AccountService {
   @Transactional(readOnly = true)
   public AccountResponse findAccountResponseByEmail(String email) {
     Account account = accountRepository.findByEmail(email)
-        .orElseThrow(() -> new EntityNotFoundException("계정이 존재하지 않습니다. email: " + email));
+        .orElseThrow(() -> new EntityNotFoundException("계정이 존재하지 않아요. email: " + email));
     return AccountResponse.of(account);
   }
 
   @Transactional(readOnly = true)
   public boolean isAuthenticatedAccount(String email, String password) {
     Account account = accountRepository.findByEmailAndSignUpType(email, SignUpType.BASIC)
-        .orElseThrow(() -> new EntityNotFoundException("계정이 존재하지 않습니다. email: " + email));
+        .orElseThrow(() -> new EntityNotFoundException("계정이 존재하지 않아요. email: " + email));
     if (!passwordEncoder.matches(password, account.getPassword())) {
       throw new UnauthorizedException("비밀번호를 확인해주세요.");
     }

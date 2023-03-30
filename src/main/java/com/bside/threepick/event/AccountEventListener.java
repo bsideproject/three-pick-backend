@@ -23,12 +23,16 @@ public class AccountEventListener {
   @EventListener
   public void onAuthorizedEvent(EmailAuthRequestedEvent emailAuthRequestedEvent) {
     javaMailSender.send(mimeMessage -> {
-      String authCode = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+      String authCode = UUID.randomUUID()
+          .toString()
+          .substring(0, 6)
+          .toUpperCase();
       String email = emailAuthRequestedEvent.getEmail();
-      stringRedisTemplate.opsForValue().set(email, authCode);
+      stringRedisTemplate.opsForValue()
+          .set(email, authCode);
       stringRedisTemplate.expire(email, 10, TimeUnit.MINUTES);
       MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-      message.setFrom(new InternetAddress("noreply@house.com", "noreply@house.com"));
+      message.setFrom(new InternetAddress("three-pick.contact@gmail.com", "no-reply"));
       message.setTo(email);
       message.setSubject("Three Pick 회원가입 이메일 인증번호");
       message.setText(authCode);
