@@ -2,6 +2,7 @@ package com.bside.threepick.domain.security.service;
 
 import com.bside.threepick.domain.account.entity.Account;
 import com.bside.threepick.domain.account.entity.SignUpType;
+import com.bside.threepick.domain.account.entity.Status;
 import com.bside.threepick.domain.account.reposiroty.AccountRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class CustomOidcAccountService implements OAuth2UserService<OidcUserReque
         .substring(0, 20);
     password = passwordEncoder.encode(password);
 
-    Account account = new Account(email, password, nickname, SignUpType.KAKAO);
+    Account account = new Account(email, password, nickname, SignUpType.KAKAO, Status.ACTIVE);
     accountRepository.save(account);
 
     return oidcUser;

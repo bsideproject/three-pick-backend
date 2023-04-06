@@ -51,15 +51,16 @@ public class SecurityConfig {
   private SecurityFilterChain setLocalMode(HttpSecurity http) throws Exception {
     http.authorizeRequests(
         author -> author
-            .antMatchers("/api/account/**", "/api/token/**", "/swagger-ui.html", "/swagger/**", "/swagger-resources/**",
-                "/swagger-ui/**", "/swagger-resources", "/v2/api-docs", "/webjars/**", "/h2-console/**")
+            .antMatchers("/api/accounts/**", "/api/tokens/**", "/swagger-ui.html", "/swagger/**",
+                "/swagger-resources/**", "/swagger-ui/**", "/swagger-resources", "/v2/api-docs", "/webjars/**",
+                "/h2-console/**")
             .permitAll()
             .anyRequest().authenticated());
     http.cors().disable();
     http.csrf().disable();
     http.headers().frameOptions().disable();
     http.oauth2Login(oauth2 -> oauth2
-        .loginPage("/api/token/expired")
+        .loginPage("/oauth2/authorization/kakao")
         .successHandler(customOAuth2SuccessHandler)
         .userInfoEndpoint().oidcUserService(customOidcAccountService(accountRepository)));
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

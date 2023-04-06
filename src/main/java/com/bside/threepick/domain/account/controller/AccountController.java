@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/account")
+@RequestMapping("/api/accounts")
 @RestController
 public class AccountController {
 
@@ -29,15 +30,15 @@ public class AccountController {
     return ResponseEntity.ok(accountService.findAccountResponseByEmail(email));
   }
 
-  @GetMapping("/{email}/auth")
+  @PostMapping("/{email}/auth")
   public ResponseEntity sendEmailAuthCode(@PathVariable String email) {
     accountService.sendEmailAuthCode(email);
     return ResponseEntity.ok()
         .build();
   }
 
-  @GetMapping("/{email}/{code}/auth")
-  public ResponseEntity<EmailAuthResponse> emailAuth(@PathVariable String email, @PathVariable String code) {
+  @GetMapping("/{email}/auth-check")
+  public ResponseEntity<EmailAuthResponse> emailAuth(@PathVariable String email, @RequestParam String code) {
     return ResponseEntity.ok(new EmailAuthResponse(accountService.isAuthenticatedEmail(email, code)));
   }
 

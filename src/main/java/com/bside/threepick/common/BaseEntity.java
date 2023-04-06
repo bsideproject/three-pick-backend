@@ -1,6 +1,7 @@
 package com.bside.threepick.common;
 
 import java.time.Instant;
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,9 +13,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class BaseEntity {
 
   @CreatedDate
+  @Column(name = "created_date")
   private Instant createdDate;
 
   @LastModifiedDate
+  @Column(name = "modified_date")
   private Instant modifiedDate;
 
   public Instant getCreatedDate() {

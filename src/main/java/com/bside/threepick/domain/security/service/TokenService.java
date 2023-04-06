@@ -1,7 +1,6 @@
 package com.bside.threepick.domain.security.service;
 
 import com.bside.threepick.domain.security.dto.Token;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -19,9 +18,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenService {
 
-  private final ObjectMapper objectMapper;
   @Value("${security.secret.key}")
   private String secretKey;
+  @Value("${front.server.host}")
+  private String frontServerHost;
 
   @PostConstruct
   protected void init() {
@@ -77,8 +77,6 @@ public class TokenService {
     response.addHeader("Refresh", token.getRefreshToken());
     response.setContentType("application/json;charset=UTF-8");
 
-    var writer = response.getWriter();
-    writer.println(objectMapper.writeValueAsString(token));
-    writer.flush();
+    response.sendRedirect(frontServerHost);
   }
 }
