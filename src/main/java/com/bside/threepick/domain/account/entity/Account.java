@@ -36,11 +36,11 @@ public class Account extends BaseEntity {
   private String nickName;
 
   @Column(name = "time_value", nullable = true, updatable = true)
-  private int timeValue;
+  private Long timeValue;
 
   @Column(name = "next_time_value", nullable = true, updatable = true)
   @ColumnDefault("0")
-  private int nextTimeValue;
+  private Long nextTimeValue;
 
   @Column(name = "next_time_value_date", nullable = true, updatable = true)
   private Instant nextTimeValueDate;
@@ -68,7 +68,7 @@ public class Account extends BaseEntity {
     this.status = status;
   }
 
-  public void changeTimeValue(int timeValue) {
+  public void changeTimeValue(Long timeValue) {
     this.timeValue = timeValue;
   }
 
@@ -88,7 +88,7 @@ public class Account extends BaseEntity {
     return password;
   }
 
-  public int getTimeValue() {
+  public Long getTimeValue() {
     return timeValue;
   }
 

@@ -12,5 +12,5 @@ public class TimeValueRequest {
 
   private String email;
   @Size(min = 0, max = 100000, message = "0원 ~ 100,000원 까지 입력 가능합니다.")
-  private int timeValue;
+  private Long timeValue;
 }

@@ -14,7 +14,7 @@ public class AccountResponse {
 
   private String email;
   private String nickName;
-  private int timeValue;
+  private Long timeValue;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
   private Instant createdDate;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
