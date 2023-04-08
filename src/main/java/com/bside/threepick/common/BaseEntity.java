@@ -13,11 +13,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class BaseEntity {
 
   @CreatedDate
-  @Column(name = "created_date")
+  @Column(name = "created_date", nullable = false, columnDefinition = "datetime default current_timestamp")
   private Instant createdDate;
 
   @LastModifiedDate
-  @Column(name = "modified_date")
+  @Column(name = "modified_date", nullable = false, columnDefinition = "datetime default current_timestamp")
   private Instant modifiedDate;
 
   public Instant getCreatedDate() {

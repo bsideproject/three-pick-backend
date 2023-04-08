@@ -59,13 +59,13 @@ public class AccountService {
     return AccountResponse.of(account);
   }
 
-  @Transactional(readOnly = true)
   public boolean isAuthenticatedAccount(String email, String password) {
     Account account = accountRepository.findByEmailAndSignUpType(email, SignUpType.BASIC)
         .orElseThrow(() -> new EntityNotFoundException("계정이 존재하지 않아요. email: " + email));
     if (!passwordEncoder.matches(password, account.getPassword())) {
       throw new UnauthorizedException("비밀번호를 확인해주세요.");
     }
+    account.changeLastLoginDate();
     return true;
   }
 

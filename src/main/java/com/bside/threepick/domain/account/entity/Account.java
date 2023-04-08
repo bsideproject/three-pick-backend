@@ -45,7 +45,7 @@ public class Account extends BaseEntity {
   @Column(name = "next_time_value_date", nullable = true, updatable = true)
   private Instant nextTimeValueDate;
 
-  @Column(name = "change_count", nullable = true, updatable = true)
+  @Column(name = "change_count", nullable = false, updatable = true)
   @ColumnDefault("0")
   private int changeCount;
 
@@ -57,6 +57,9 @@ public class Account extends BaseEntity {
   @Enumerated(value = EnumType.STRING)
   private Status status;
 
+  @Column(name = "last_login_date", nullable = true, updatable = true)
+  private Instant lastLoginDate;
+
   protected Account() {
   }
 
@@ -66,6 +69,10 @@ public class Account extends BaseEntity {
     this.nickName = nickName;
     this.signUpType = signUpType;
     this.status = status;
+  }
+
+  public void changeLastLoginDate() {
+    this.lastLoginDate = Instant.now();
   }
 
   public void changeTimeValue(Long timeValue) {
@@ -92,4 +99,11 @@ public class Account extends BaseEntity {
     return timeValue;
   }
 
+  public int getChangeCount() {
+    return changeCount;
+  }
+
+  public Instant getLastLoginDate() {
+    return lastLoginDate;
+  }
 }

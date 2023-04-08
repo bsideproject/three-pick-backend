@@ -15,13 +15,19 @@ public class AccountResponse {
   private String email;
   private String nickName;
   private Long timeValue;
+  private int changeCount;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+  private Instant lastLoginDate;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
   private Instant createdDate;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
   private Instant modifiedDate;
 
   public static AccountResponse of(Account account) {
     return new AccountResponse(account.getEmail(), account.getNickName(), account.getTimeValue(),
-        account.getCreatedDate(), account.getModifiedDate());
+        account.getChangeCount(), account.getLastLoginDate(), account.getCreatedDate(), account.getModifiedDate());
   }
 }

@@ -20,6 +20,7 @@ public class TokenService {
 
   @Value("${security.secret.key}")
   private String secretKey;
+
   @Value("${front.server.host}")
   private String frontServerHost;
 
@@ -73,10 +74,6 @@ public class TokenService {
   }
 
   public void responseToken(HttpServletResponse response, Token token) throws IOException {
-    response.addHeader("Auth", token.getAccessToken());
-    response.addHeader("Refresh", token.getRefreshToken());
-    response.setContentType("application/json;charset=UTF-8");
-
-    response.sendRedirect(frontServerHost);
+    response.sendRedirect(frontServerHost + "?auth=" + token.getAccessToken() + "&refresh=" + token.getRefreshToken());
   }
 }

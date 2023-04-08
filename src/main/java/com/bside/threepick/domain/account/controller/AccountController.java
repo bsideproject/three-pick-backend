@@ -45,13 +45,14 @@ public class AccountController {
   @PostMapping
   public ResponseEntity<AccountResponse> signup(@Validated @RequestBody SignUpRequest signUpRequest) {
     AccountResponse accountResponse = accountService.signUp(signUpRequest);
-    return ResponseEntity.created(URI.create("/api/account/" + accountResponse.getEmail()))
+    return ResponseEntity.created(URI.create("/api/accounts/" + accountResponse.getEmail()))
         .body(accountResponse);
   }
 
   @PutMapping("/time-value")
   public ResponseEntity<AccountResponse> updateTimeValue(@Validated @RequestBody TimeValueRequest timeValueRequest) {
     accountService.updateTimeValue(timeValueRequest);
-    return ResponseEntity.ok(accountService.findAccountResponseByEmail(timeValueRequest.getEmail()));
+    return ResponseEntity.ok()
+        .build();
   }
 }
