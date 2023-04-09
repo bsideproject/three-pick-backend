@@ -1,4 +1,4 @@
-package com.bside.threepick.domain.account.dto;
+package com.bside.threepick.domain.account.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

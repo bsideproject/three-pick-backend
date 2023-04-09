@@ -26,22 +26,20 @@ public class CustomOidcAccountService implements OAuth2UserService<OidcUserReque
 
     OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService = new OidcUserService();
     OidcUser oidcUser = oidcUserService.loadUser(userRequest);
+    accountRepository.findByEmail(oidcUser.getEmail())
+        .ifPresentOrElse(account -> {
+          account.changeLastLoginDate();
+        }, () -> {
+          String email = oidcUser.getAttribute("email");
+          String nickname = oidcUser.getAttribute("nickname");
+          String password = UUID.randomUUID()
+              .toString()
+              .replace("-", "")
+              .substring(0, 20);
 
-    if (accountRepository.findByEmail(oidcUser.getEmail())
-        .isPresent()) {
-      return oidcUser;
-    }
-    String email = oidcUser.getAttribute("email");
-    String nickname = oidcUser.getAttribute("nickname");
-    String password = UUID.randomUUID()
-        .toString()
-        .replace("-", "")
-        .substring(0, 20);
-    password = passwordEncoder.encode(password);
-
-    Account account = new Account(email, password, nickname, SignUpType.KAKAO, Status.ACTIVE);
-    accountRepository.save(account);
-
+          password = passwordEncoder.encode(password);
+          accountRepository.save(new Account(email, password, nickname, SignUpType.KAKAO, Status.ACTIVE));
+        });
     return oidcUser;
   }
 }

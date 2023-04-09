@@ -1,4 +1,4 @@
-package com.bside.threepick.domain.account.dto;
+package com.bside.threepick.domain.account.dto.request;
 
 import com.bside.threepick.domain.account.entity.Account;
 import com.bside.threepick.domain.account.entity.SignUpType;

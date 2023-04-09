@@ -2,7 +2,7 @@ package com.bside.threepick.domain.account.entity;
 
 
 import com.bside.threepick.common.BaseEntity;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -43,7 +43,7 @@ public class Account extends BaseEntity {
   private Long nextTimeValue;
 
   @Column(name = "next_time_value_date", nullable = true, updatable = true)
-  private Instant nextTimeValueDate;
+  private LocalDateTime nextTimeValueDate;
 
   @Column(name = "change_count", nullable = false, updatable = true)
   @ColumnDefault("0")
@@ -58,7 +58,7 @@ public class Account extends BaseEntity {
   private Status status;
 
   @Column(name = "last_login_date", nullable = true, updatable = true)
-  private Instant lastLoginDate;
+  private LocalDateTime lastLoginDate;
 
   protected Account() {
   }
@@ -72,11 +72,12 @@ public class Account extends BaseEntity {
   }
 
   public void changeLastLoginDate() {
-    this.lastLoginDate = Instant.now();
+    this.lastLoginDate = LocalDateTime.now();
   }
 
   public void changeTimeValue(Long timeValue) {
     this.timeValue = timeValue;
+    changeCount++;
   }
 
   public Long getId() {
@@ -103,7 +104,11 @@ public class Account extends BaseEntity {
     return changeCount;
   }
 
-  public Instant getLastLoginDate() {
+  public LocalDateTime getLastLoginDate() {
     return lastLoginDate;
+  }
+
+  public boolean isBasicOfSignUpType() {
+    return signUpType == SignUpType.BASIC;
   }
 }

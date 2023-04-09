@@ -1,4 +1,4 @@
-package com.bside.threepick.domain.security.dto;
+package com.bside.threepick.domain.security.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

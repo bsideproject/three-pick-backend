@@ -1,8 +1,8 @@
-package com.bside.threepick.domain.account.dto;
+package com.bside.threepick.domain.account.dto.response;
 
 import com.bside.threepick.domain.account.entity.Account;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,13 +18,13 @@ public class AccountResponse {
   private int changeCount;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-  private Instant lastLoginDate;
+  private LocalDateTime lastLoginDate;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-  private Instant createdDate;
+  private LocalDateTime createdDate;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-  private Instant modifiedDate;
+  private LocalDateTime modifiedDate;
 
   public static AccountResponse of(Account account) {
     return new AccountResponse(account.getEmail(), account.getNickName(), account.getTimeValue(),

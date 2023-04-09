@@ -1,6 +1,6 @@
 package com.bside.threepick.domain.security.service;
 
-import com.bside.threepick.domain.security.dto.Token;
+import com.bside.threepick.domain.security.dto.response.Token;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -29,12 +29,13 @@ public class TokenService {
     secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
   }
 
-  public Token generateToken(String subject, String role) {
+  public Token generateToken(String subject, Long accountId, String role) {
     long tokenPeriod = 1000L * 60L * 10L;
     long refreshPeriod = 1000L * 60L * 60L;
 
     Claims claims = Jwts.claims().setSubject(subject);
     claims.put("role", role);
+    claims.put("accountId", accountId);
 
     Date now = new Date();
     return new Token(
@@ -71,6 +72,10 @@ public class TokenService {
 
   public String getRole(String token) {
     return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role", String.class);
+  }
+
+  public Long getAccountId(String token) {
+    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("accountId", Long.class);
   }
 
   public void responseToken(HttpServletResponse response, Token token) throws IOException {

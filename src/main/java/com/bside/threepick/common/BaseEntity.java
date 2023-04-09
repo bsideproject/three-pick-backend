@@ -1,6 +1,6 @@
 package com.bside.threepick.common;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -14,17 +14,17 @@ public class BaseEntity {
 
   @CreatedDate
   @Column(name = "created_date", nullable = false, columnDefinition = "datetime default current_timestamp")
-  private Instant createdDate;
+  private LocalDateTime createdDate;
 
   @LastModifiedDate
   @Column(name = "modified_date", nullable = false, columnDefinition = "datetime default current_timestamp")
-  private Instant modifiedDate;
+  private LocalDateTime modifiedDate;
 
-  public Instant getCreatedDate() {
+  public LocalDateTime getCreatedDate() {
     return createdDate;
   }
 
-  public Instant getModifiedDate() {
+  public LocalDateTime getModifiedDate() {
     return modifiedDate;
   }
 }
