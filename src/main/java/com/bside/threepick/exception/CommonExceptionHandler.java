@@ -11,13 +11,14 @@ public class CommonExceptionHandler {
     @ExceptionHandler(CommonException.class)
     public ResponseEntity<ErrorMessage> common(CommonException ex) {
         return ResponseEntity.status(ex.getStatusCode())
-                .body(new ErrorMessage(ex.getMessage(), ex.getStatusCode()));
+                .body(new ErrorMessage(ex.getMessage(),ex.code, ex.getStatusCode()));
     }
 
     @AllArgsConstructor
     @Data
     private static class ErrorMessage {
         private String message;
+        private int code;
         private int statusCode;
     }
 }

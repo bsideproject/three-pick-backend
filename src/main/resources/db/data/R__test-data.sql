@@ -1,0 +1,1 @@
+INSERT INTO c(account_id, content) values(2,'회고 내용입니다.🥰');

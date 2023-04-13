@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface RetrospectRepository extends JpaRepository<Retrospect, Long> {
     Optional<Retrospect> getRetrospectByAccountIdAndRetrospectDate(Long accountId, LocalDate retrospectDate);
+
+    Optional<Retrospect> getRetrospectById(Long id);
 }
