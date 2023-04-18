@@ -1,1 +1,1 @@
-INSERT INTO c(account_id, content) values(2,'회고 내용입니다.🥰');
+INSERT INTO restrospect(account_id, content, retrospect_date) values(1,'회고 내용입니다.🥰', '2023-03-23');

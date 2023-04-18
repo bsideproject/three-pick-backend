@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CommonExceptionHandler {
     @ExceptionHandler(CommonException.class)
     public ResponseEntity<ErrorMessage> common(CommonException ex) {
+        String errorMessage = ex.getMessage();
+        int code = ex.errorCode;
         return ResponseEntity.status(ex.getStatusCode())
-                .body(new ErrorMessage(ex.getMessage(),ex.code, ex.getStatusCode()));
+                .body(new ErrorMessage(errorMessage, code, ex.getStatusCode()));
     }
 
     @AllArgsConstructor

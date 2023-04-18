@@ -11,6 +11,7 @@ public class EntityAlreadyExistsException extends CommonException {
     }
 
     public EntityAlreadyExistsException(ErrorCode code, String message) {
-        super(message);
+        super(code, message);
+
     }
 }

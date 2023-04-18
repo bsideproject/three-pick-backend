@@ -20,7 +20,7 @@ public class RetrospectResponse {
     private LocalDate createdDate;
     private LocalDate modifiedDate;
 
-    public static RetrospectResponse fromEntity(Retrospect retrospect) {
+    public static RetrospectResponse of(Retrospect retrospect) {
         return RetrospectResponse.builder()
                 .accountId(retrospect.getAccountId())
                 .id(retrospect.getId())

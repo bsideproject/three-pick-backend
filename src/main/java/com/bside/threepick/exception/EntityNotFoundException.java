@@ -1,5 +1,6 @@
 package com.bside.threepick.exception;
 
+import com.bside.threepick.common.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class EntityNotFoundException extends CommonException {
@@ -9,7 +10,7 @@ public class EntityNotFoundException extends CommonException {
         return HttpStatus.NOT_FOUND.value();
     }
 
-    public EntityNotFoundException(String message) {
-        super(message);
+    public EntityNotFoundException(ErrorCode errorCode, String message) {
+        super(errorCode, message);
     }
 }

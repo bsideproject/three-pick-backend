@@ -1,10 +1,7 @@
 package com.bside.threepick.domain.retrospect.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +10,7 @@ import java.time.LocalDate;
 @Table(name = "RETROSPECT")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 public class Retrospect {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

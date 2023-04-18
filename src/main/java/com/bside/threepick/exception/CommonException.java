@@ -4,12 +4,12 @@ import com.bside.threepick.common.ErrorCode;
 
 abstract public class CommonException extends RuntimeException{
 
-    public CommonException(ErrorCode error, String... args) {
-        super(args != null ? String.format(error.getMessage(), (Object[]) args) : error.getMessage());
-        this.errorCode = error.getCode();
-    }
+    public int errorCode;
+    public abstract int getStatusCode();
 
-    public int getErrorCode() {
-        return errorCode;
+
+    public CommonException(ErrorCode error, String message) {
+        super(message);
+        this.errorCode = error.getCode();
     }
 }
