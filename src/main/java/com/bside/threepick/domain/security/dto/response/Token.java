@@ -1,14 +1,15 @@
 package com.bside.threepick.domain.security.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Data
 public class Token {
 
+  private Long accountId;
   private String accessToken;
   private String refreshToken;
 }

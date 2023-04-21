@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 
 public class EntityNotFoundException extends CommonException {
 
-  public EntityNotFoundException(String message) {
-    super(message);
+  public EntityNotFoundException(ErrorCode errorCode, String message) {
+    super(errorCode, message);
   }
 
   @Override

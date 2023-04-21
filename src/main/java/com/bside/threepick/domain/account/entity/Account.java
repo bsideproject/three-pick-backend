@@ -2,6 +2,7 @@ package com.bside.threepick.domain.account.entity;
 
 
 import com.bside.threepick.common.BaseEntity;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,8 +43,8 @@ public class Account extends BaseEntity {
   @ColumnDefault("0")
   private Long nextTimeValue;
 
-  @Column(name = "next_time_value_date", nullable = true, updatable = true)
-  private LocalDateTime nextTimeValueDate;
+  @Column(name = "next_time_value_date", nullable = false, updatable = true)
+  private LocalDate nextTimeValueDate;
 
   @Column(name = "change_count", nullable = false, updatable = true)
   @ColumnDefault("0")
@@ -55,7 +56,11 @@ public class Account extends BaseEntity {
 
   @Column(name = "status", nullable = false, updatable = true)
   @Enumerated(value = EnumType.STRING)
-  private Status status;
+  private AccountStatus status;
+
+  @Column(name = "coachMark", nullable = false, updatable = true)
+  @ColumnDefault("false")
+  private boolean coachMark;
 
   @Column(name = "last_login_date", nullable = true, updatable = true)
   private LocalDateTime lastLoginDate;
@@ -63,21 +68,52 @@ public class Account extends BaseEntity {
   protected Account() {
   }
 
-  public Account(String email, String password, String nickName, SignUpType signUpType, Status status) {
+  public Account(String email, String password, String nickName, SignUpType signUpType, AccountStatus status) {
     this.email = email;
     this.password = password;
     this.nickName = nickName;
     this.signUpType = signUpType;
     this.status = status;
+    this.nextTimeValueDate = LocalDate.now();
   }
 
   public void changeLastLoginDate() {
-    this.lastLoginDate = LocalDateTime.now();
+    lastLoginDate = LocalDateTime.now();
   }
 
   public void changeTimeValue(Long timeValue) {
     this.timeValue = timeValue;
     changeCount++;
+  }
+
+  public void changeNextTimeValue(Long timeValue) {
+    nextTimeValue = timeValue;
+    nextTimeValueDate = LocalDate.now()
+        .plusDays(1l);
+    changeCount++;
+  }
+
+  public void changeCoachMark() {
+    coachMark = true;
+  }
+
+  public void checkNextTimeValue() {
+    resetChangeCount();
+    resetNextTimeValue();
+  }
+
+  private void resetChangeCount() {
+    if (LocalDate.now().isAfter(nextTimeValueDate)) {
+      changeCount = 0;
+    }
+  }
+
+  private void resetNextTimeValue() {
+    if (nextTimeValue != 0 &&
+        (LocalDate.now().isEqual(nextTimeValueDate) || LocalDate.now().isAfter(nextTimeValueDate))) {
+      timeValue = nextTimeValue;
+      nextTimeValue = 0L;
+    }
   }
 
   public Long getId() {
@@ -106,6 +142,14 @@ public class Account extends BaseEntity {
 
   public LocalDateTime getLastLoginDate() {
     return lastLoginDate;
+  }
+
+  public LocalDate getNextTimeValueDate() {
+    return nextTimeValueDate;
+  }
+
+  public boolean isCoachMark() {
+    return coachMark;
   }
 
   public boolean isBasicOfSignUpType() {

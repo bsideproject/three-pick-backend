@@ -51,9 +51,9 @@ public class SecurityConfig {
   private SecurityFilterChain setLocalMode(HttpSecurity http) throws Exception {
     http.authorizeRequests(
         author -> author
-            .antMatchers("/api/accounts/**", "/api/tokens/**", "/swagger-ui.html", "/swagger/**",
-                "/swagger-resources/**", "/swagger-ui/**", "/swagger-resources", "/v2/api-docs", "/webjars/**",
-                "/h2-console/**")
+            .antMatchers("/api/accounts/**", "/api/tokens/**", "/api/goals/**", "/api/retrospects/**",
+                "/swagger-ui.html", "/swagger/**", "/swagger-resources/**", "/swagger-ui/**", "/swagger-resources",
+                "/v2/api-docs", "/webjars/**", "/h2-console/**")
             .permitAll()
             .anyRequest().authenticated());
     http.cors().disable();

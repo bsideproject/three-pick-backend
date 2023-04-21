@@ -5,13 +5,13 @@ import org.springframework.http.HttpStatus;
 
 public class EntityAlreadyExistsException extends CommonException {
 
-    @Override
-    public int getStatusCode() {
-        return HttpStatus.BAD_REQUEST.value();
-    }
+  public EntityAlreadyExistsException(ErrorCode code, String message) {
+    super(code, message);
 
-    public EntityAlreadyExistsException(ErrorCode code, String message) {
-        super(code, message);
+  }
 
-    }
+  @Override
+  public int getStatusCode() {
+    return HttpStatus.BAD_REQUEST.value();
+  }
 }

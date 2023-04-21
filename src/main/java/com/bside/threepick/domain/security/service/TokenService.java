@@ -38,7 +38,7 @@ public class TokenService {
     claims.put("accountId", accountId);
 
     Date now = new Date();
-    return new Token(
+    return new Token(accountId,
         Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
@@ -79,6 +79,7 @@ public class TokenService {
   }
 
   public void responseToken(HttpServletResponse response, Token token) throws IOException {
-    response.sendRedirect(frontServerHost + "?auth=" + token.getAccessToken() + "&refresh=" + token.getRefreshToken());
+    response.sendRedirect(frontServerHost + "?auth=" + token.getAccessToken()
+        + "&refresh=" + token.getRefreshToken() + "account-id=" + token.getAccountId());
   }
 }

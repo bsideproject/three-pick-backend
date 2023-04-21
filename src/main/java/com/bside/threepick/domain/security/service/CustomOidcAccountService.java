@@ -1,8 +1,8 @@
 package com.bside.threepick.domain.security.service;
 
 import com.bside.threepick.domain.account.entity.Account;
+import com.bside.threepick.domain.account.entity.AccountStatus;
 import com.bside.threepick.domain.account.entity.SignUpType;
-import com.bside.threepick.domain.account.entity.Status;
 import com.bside.threepick.domain.account.reposiroty.AccountRepository;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +27,7 @@ public class CustomOidcAccountService implements OAuth2UserService<OidcUserReque
     OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService = new OidcUserService();
     OidcUser oidcUser = oidcUserService.loadUser(userRequest);
     accountRepository.findByEmail(oidcUser.getEmail())
-        .ifPresentOrElse(account -> {
-          account.changeLastLoginDate();
-        }, () -> {
+        .ifPresentOrElse(Account::changeLastLoginDate, () -> {
           String email = oidcUser.getAttribute("email");
           String nickname = oidcUser.getAttribute("nickname");
           String password = UUID.randomUUID()
@@ -38,7 +36,7 @@ public class CustomOidcAccountService implements OAuth2UserService<OidcUserReque
               .substring(0, 20);
 
           password = passwordEncoder.encode(password);
-          accountRepository.save(new Account(email, password, nickname, SignUpType.KAKAO, Status.ACTIVE));
+          accountRepository.save(new Account(email, password, nickname, SignUpType.KAKAO, AccountStatus.ACTIVE));
         });
     return oidcUser;
   }

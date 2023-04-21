@@ -1,11 +1,12 @@
 package com.bside.threepick.exception;
 
+import com.bside.threepick.common.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class AlreadyExistsEmailException extends CommonException {
 
-  public AlreadyExistsEmailException(String message) {
-    super(message);
+  public AlreadyExistsEmailException(ErrorCode errorCode, String message) {
+    super(errorCode, message);
   }
 
   @Override

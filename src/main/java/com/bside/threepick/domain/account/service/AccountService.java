@@ -1,5 +1,6 @@
 package com.bside.threepick.domain.account.service;
 
+import com.bside.threepick.common.ErrorCode;
 import com.bside.threepick.domain.account.dto.request.SignUpRequest;
 import com.bside.threepick.domain.account.dto.request.TimeValueRequest;
 import com.bside.threepick.domain.account.dto.response.AccountResponse;
@@ -31,10 +32,10 @@ public class AccountService {
   public AccountResponse signUp(SignUpRequest signUpRequest) {
     accountRepository.findByEmail(signUpRequest.getEmail()).ifPresent(account -> {
       if (account.isBasicOfSignUpType()) {
-        throw new AlreadyExistsEmailException(
+        throw new AlreadyExistsEmailException(ErrorCode.ACCOUNT_ALREADY_EXISTS,
             "이미 가입 된 이메일이에요. '이메일 로그인' 으로 로그인 해주세요! email: " + signUpRequest.getEmail());
       } else {
-        throw new AlreadyExistsEmailException(
+        throw new AlreadyExistsEmailException(ErrorCode.ACCOUNT_ALREADY_EXISTS,
             "이미 가입 된 이메일이에요. '카카오로 로그인하기' 로 로그인 해주세요! email: " + signUpRequest.getEmail());
       }
     });
@@ -48,7 +49,7 @@ public class AccountService {
   public void sendEmailAuthCode(String email) {
     if (accountRepository.findByEmail(email)
         .isPresent()) {
-      throw new AlreadyExistsEmailException("이미 가입 된 이메일이에요. '이메일 로그인' 으로 로그인 해주세요!");
+      throw new AlreadyExistsEmailException(ErrorCode.ACCOUNT_ALREADY_EXISTS, "이미 가입 된 이메일이에요. '이메일 로그인' 으로 로그인 해주세요!");
     }
     eventPublisher.publishEvent(new EmailAuthRequestedEvent(email));
   }
@@ -58,25 +59,21 @@ public class AccountService {
     return code.equals(stringRedisTemplate.opsForValue().get(email));
   }
 
-  @Transactional(readOnly = true)
-  public AccountResponse findAccountResponseByEmail(String email) {
-    Account account = accountRepository.findByEmail(email)
-        .orElseThrow(() -> new EntityNotFoundException("계정이 존재하지 않아요. email: " + email));
-    return AccountResponse.of(account);
-  }
-
-  @Transactional(readOnly = true)
   public AccountResponse findAccountResponseById(Long accountId) {
     Account account = accountRepository.findById(accountId)
-        .orElseThrow(() -> new EntityNotFoundException("계정이 존재하지 않아요. accountId: " + accountId));
+        .orElseThrow(
+            () -> new EntityNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND, "계정이 존재하지 않아요. accountId: " + accountId));
+
+    account.checkNextTimeValue();
+
     return AccountResponse.of(account);
   }
 
   public Account authenticate(String email, String password) {
     Account account = accountRepository.findByEmailAndSignUpType(email, SignUpType.BASIC)
-        .orElseThrow(() -> new EntityNotFoundException("계정이 존재하지 않아요. email: " + email));
+        .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND, "계정이 존재하지 않아요. email: " + email));
     if (!passwordEncoder.matches(password, account.getPassword())) {
-      throw new UnauthorizedException("비밀번호를 확인해주세요.");
+      throw new UnauthorizedException(ErrorCode.UNAUTHORIZED, "비밀번호를 확인해주세요.");
     }
     account.changeLastLoginDate();
     return account;
@@ -86,9 +83,18 @@ public class AccountService {
     accountRepository.findById(timeValueRequest.getAccountId())
         .ifPresent(account -> {
           if (account.getChangeCount() > 1) {
-            throw new ChangeTimeValueCountException("한 시간의 가치를 변경할 수 있는 횟수를 모두 사용하셨어요.");
+            throw new ChangeTimeValueCountException(ErrorCode.TIME_VALUE_NOT_CHANGED);
           }
-          account.changeTimeValue(timeValueRequest.getTimeValue());
+          if (account.getTimeValue() == null) {
+            account.changeTimeValue(timeValueRequest.getTimeValue());
+          } else {
+            account.changeNextTimeValue(timeValueRequest.getTimeValue());
+          }
         });
+  }
+
+  public void updateCoachMark(Long accountId) {
+    accountRepository.findById(accountId)
+        .ifPresent(Account::changeCoachMark);
   }
 }

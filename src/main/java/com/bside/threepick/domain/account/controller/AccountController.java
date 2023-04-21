@@ -5,6 +5,7 @@ import com.bside.threepick.domain.account.dto.request.TimeValueRequest;
 import com.bside.threepick.domain.account.dto.response.AccountResponse;
 import com.bside.threepick.domain.account.dto.response.EmailAuthResponse;
 import com.bside.threepick.domain.account.service.AccountService;
+import io.swagger.annotations.ApiOperation;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +26,13 @@ public class AccountController {
 
   private final AccountService accountService;
 
-  @GetMapping("/{email:.+}")
-  public ResponseEntity<AccountResponse> findAccountByEmail(@PathVariable String email) {
-    return ResponseEntity.ok(accountService.findAccountResponseByEmail(email));
+  @ApiOperation(value = "사용자 정보 조회")
+  @GetMapping("/{accountId}")
+  public ResponseEntity<AccountResponse> findAccountById(@PathVariable Long accountId) {
+    return ResponseEntity.ok(accountService.findAccountResponseById(accountId));
   }
 
+  @ApiOperation(value = "이메일 인증코드 발송")
   @PostMapping("/{email}/auth")
   public ResponseEntity sendEmailAuthCode(@PathVariable String email) {
     accountService.sendEmailAuthCode(email);
@@ -37,11 +40,13 @@ public class AccountController {
         .build();
   }
 
+  @ApiOperation(value = "이메일 인증코드 검증")
   @GetMapping("/{email}/auth-check")
   public ResponseEntity<EmailAuthResponse> emailAuth(@PathVariable String email, @RequestParam String code) {
     return ResponseEntity.ok(new EmailAuthResponse(accountService.isAuthenticatedEmail(email, code)));
   }
 
+  @ApiOperation(value = "회원가입")
   @PostMapping
   public ResponseEntity<AccountResponse> signup(@Validated @RequestBody SignUpRequest signUpRequest) {
     AccountResponse accountResponse = accountService.signUp(signUpRequest);
@@ -49,9 +54,17 @@ public class AccountController {
         .body(accountResponse);
   }
 
+  @ApiOperation(value = "한 시간의 가치 수정")
   @PutMapping("/time-value")
   public ResponseEntity<AccountResponse> updateTimeValue(@Validated @RequestBody TimeValueRequest timeValueRequest) {
     accountService.updateTimeValue(timeValueRequest);
     return ResponseEntity.ok(accountService.findAccountResponseById(timeValueRequest.getAccountId()));
+  }
+
+  @ApiOperation(value = "코치마크 구분 수정")
+  @PutMapping("/{accountId}/coach-mark")
+  public ResponseEntity<AccountResponse> updateCoachMark(@PathVariable Long accountId) {
+    accountService.updateCoachMark(accountId);
+    return ResponseEntity.ok(accountService.findAccountResponseById(accountId));
   }
 }

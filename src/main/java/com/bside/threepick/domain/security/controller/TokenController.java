@@ -1,11 +1,13 @@
 package com.bside.threepick.domain.security.controller;
 
+import com.bside.threepick.common.ErrorCode;
 import com.bside.threepick.domain.account.entity.Account;
 import com.bside.threepick.domain.account.service.AccountService;
 import com.bside.threepick.domain.security.dto.request.SignInRequest;
 import com.bside.threepick.domain.security.dto.response.Token;
 import com.bside.threepick.domain.security.service.TokenService;
 import com.bside.threepick.exception.UnauthorizedException;
+import io.swagger.annotations.ApiOperation;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,9 +28,10 @@ public class TokenController {
 
   @GetMapping("/expired")
   public String auth() {
-    throw new UnauthorizedException("토큰이 유효하지 않습니다.");
+    throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
   }
 
+  @ApiOperation(value = "RefreshToken 으로 AccessToken, RefreshToken 갱신")
   @GetMapping("/refresh")
   public void refreshAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String token = request.getHeader("Refresh");
@@ -40,15 +43,17 @@ public class TokenController {
       tokenService.responseToken(response, newToken);
     }
 
-    throw new UnauthorizedException("토큰이 유효하지 않습니다.");
+    throw new UnauthorizedException(ErrorCode.UNAUTHORIZED);
   }
 
+  @ApiOperation(value = "로그인")
   @PostMapping("/signin")
-  public void signin(@RequestBody SignInRequest signInRequest, HttpServletResponse response) throws IOException {
+  public Token signin(@RequestBody SignInRequest signInRequest, HttpServletResponse response) throws IOException {
     Account authenticatedAccount = accountService.authenticate(signInRequest.getEmail(),
         signInRequest.getPassword());
     Token token = tokenService.generateToken(authenticatedAccount.getEmail(), authenticatedAccount.getId(),
         "ROLE_USER");
-    tokenService.responseToken(response, token);
+    token.setAccountId(authenticatedAccount.getId());
+    return token;
   }
 }

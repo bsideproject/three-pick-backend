@@ -1,8 +1,8 @@
 package com.bside.threepick.domain.account.dto.request;
 
 import com.bside.threepick.domain.account.entity.Account;
+import com.bside.threepick.domain.account.entity.AccountStatus;
 import com.bside.threepick.domain.account.entity.SignUpType;
-import com.bside.threepick.domain.account.entity.Status;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import lombok.Data;
@@ -18,6 +18,6 @@ public class SignUpRequest {
   private String nickName;
 
   public Account createAccount(String encodedPassword) {
-    return new Account(email, encodedPassword, nickName, SignUpType.BASIC, Status.ACTIVE);
+    return new Account(email, encodedPassword, nickName, SignUpType.BASIC, AccountStatus.ACTIVE);
   }
 }
