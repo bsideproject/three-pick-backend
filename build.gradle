@@ -33,6 +33,8 @@ dependencies {
 	implementation 'com.mysql:mysql-connector-j'
 	compileOnly 'org.flywaydb:flyway-mysql'
 	compileOnly 'org.projectlombok:lombok'
+	compileOnly 'org.flywaydb:flyway-mysql'
+	implementation 'org.flywaydb:flyway-core'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
