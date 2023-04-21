@@ -15,5 +15,4 @@ public class ThreePickApplication {
   public static void main(String[] args) {
     SpringApplication.run(ThreePickApplication.class, args);
   }
-
 }

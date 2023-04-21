@@ -1,10 +1,19 @@
 package com.bside.threepick.exception;
 
-abstract public class CommonException extends RuntimeException{
+import com.bside.threepick.common.ErrorCode;
 
-    public abstract int getStatusCode();
+abstract public class CommonException extends RuntimeException {
 
-    public CommonException(String message) {
-        super(message);
-    }
+  private int errorCode;
+
+  public CommonException(ErrorCode error, String message) {
+    super(message);
+    this.errorCode = error.getCode();
+  }
+
+  public abstract int getStatusCode();
+
+  public int getErrorCode() {
+    return errorCode;
+  }
 }

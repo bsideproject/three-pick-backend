@@ -1,5 +1,5 @@
 package com.bside.threepick.domain.account.entity;
 
-public enum Status {
+public enum AccountStatus {
   ACTIVE, DELETE;
 }

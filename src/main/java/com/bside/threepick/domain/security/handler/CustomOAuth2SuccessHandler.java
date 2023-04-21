@@ -1,5 +1,6 @@
 package com.bside.threepick.domain.security.handler;
 
+import com.bside.threepick.common.ErrorCode;
 import com.bside.threepick.domain.account.reposiroty.AccountRepository;
 import com.bside.threepick.domain.security.dto.response.Token;
 import com.bside.threepick.domain.security.service.TokenService;
@@ -26,7 +27,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
     String email = ((OAuth2User) authentication.getPrincipal()).getAttribute("email");
     Long accountId = accountRepository.findByEmail(email)
-        .orElseThrow(() -> new EntityNotFoundException("계정이 존재하지 않아요. email: " + email))
+        .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND, "계정이 존재하지 않아요. email: " + email))
         .getId();
 
     Token token = tokenService.generateToken(email, accountId, "ROLE_USER");

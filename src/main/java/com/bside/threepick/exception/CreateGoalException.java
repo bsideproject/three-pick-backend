@@ -3,10 +3,14 @@ package com.bside.threepick.exception;
 import com.bside.threepick.common.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public class ChangeTimeValueCountException extends CommonException {
+public class CreateGoalException extends CommonException {
 
-  public ChangeTimeValueCountException(ErrorCode errorCode) {
+  public CreateGoalException(ErrorCode errorCode) {
     super(errorCode, errorCode.getMessage());
+  }
+
+  public CreateGoalException(ErrorCode errorCode, String message) {
+    super(errorCode, message);
   }
 
   @Override

@@ -3,10 +3,11 @@ package com.bside.threepick.exception;
 import com.bside.threepick.common.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public class ChangeTimeValueCountException extends CommonException {
+public class EntityAlreadyExistsException extends CommonException {
 
-  public ChangeTimeValueCountException(ErrorCode errorCode) {
-    super(errorCode, errorCode.getMessage());
+  public EntityAlreadyExistsException(ErrorCode code, String message) {
+    super(code, message);
+
   }
 
   @Override

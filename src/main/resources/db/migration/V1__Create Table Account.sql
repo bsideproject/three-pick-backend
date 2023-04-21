@@ -9,6 +9,7 @@ create table account (
      change_count integer default '0',
      signup_type varchar(255) not null,
      status varchar(255) not null default 'ACTIVE',
+     coach_mark bit(1) not null default b'0',
      last_login_date datetime(6),
      created_date datetime not null default current_timestamp ,
      modified_date datetime not null default current_timestamp ,

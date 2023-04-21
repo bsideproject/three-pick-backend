@@ -3,10 +3,10 @@ package com.bside.threepick.exception;
 import com.bside.threepick.common.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public class ChangeTimeValueCountException extends CommonException {
+public class IllegalRequestException extends CommonException {
 
-  public ChangeTimeValueCountException(ErrorCode errorCode) {
-    super(errorCode, errorCode.getMessage());
+  public IllegalRequestException(ErrorCode errorCode, String message) {
+    super(errorCode, message);
   }
 
   @Override

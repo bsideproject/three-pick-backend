@@ -2,12 +2,13 @@ package com.bside.threepick.domain.account.dto.request;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 public class TimeValueRequest {
 
