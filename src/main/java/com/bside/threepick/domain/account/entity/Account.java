@@ -58,7 +58,7 @@ public class Account extends BaseEntity {
   @Enumerated(value = EnumType.STRING)
   private AccountStatus status;
 
-  @Column(name = "coachMark", nullable = false, updatable = true)
+  @Column(name = "coach_mark", nullable = false, updatable = true)
   @ColumnDefault("false")
   private boolean coachMark;
 

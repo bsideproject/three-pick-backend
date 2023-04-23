@@ -1,11 +1,12 @@
 package com.bside.threepick.exception;
 
+import com.bside.threepick.common.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class SignUpPasswordException extends CommonException {
 
-  public SignUpPasswordException(String message) {
-    super(message);
+  public SignUpPasswordException(ErrorCode errorCode,String message) {
+    super(errorCode, message);
   }
 
   @Override

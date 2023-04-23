@@ -53,7 +53,7 @@ public class RetrospectService {
     if (!retrospect.getAccountId().equals(updateRetrospect.getAccountId())) {
       throw new IllegalRequestException(ErrorCode.RETROSPECT_ACCOUNT_ID_DIFFERENT, "회고의 accountId 와 불일치해요.");
     }
-    retrospect.setContent(updateRetrospect.getContent());
+    retrospect.changeContent(updateRetrospect.getContent());
     return RetrospectResponse.of(retrospectRepository.save(retrospect));
   }
 }

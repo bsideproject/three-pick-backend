@@ -10,5 +10,5 @@ public class CreateRetrospectRequest {
   private Long accountId;
   private String content;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-  private LocalDate retrospectDate;
+  private LocalDate retrospectDate = LocalDate.now();
 }
