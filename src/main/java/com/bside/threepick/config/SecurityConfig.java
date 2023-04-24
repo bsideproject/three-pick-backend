@@ -4,6 +4,7 @@ import com.bside.threepick.domain.account.reposiroty.AccountRepository;
 import com.bside.threepick.domain.security.filter.JwtAuthFilter;
 import com.bside.threepick.domain.security.service.CustomOidcAccountService;
 import com.bside.threepick.domain.security.service.TokenService;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -16,6 +17,9 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -56,7 +60,7 @@ public class SecurityConfig {
                 "/v2/api-docs", "/webjars/**", "/h2-console/**")
             .permitAll()
             .anyRequest().authenticated());
-    http.cors().disable();
+    http.cors().configurationSource(corsConfigurationSource());
     http.csrf().disable();
     http.headers().frameOptions().disable();
     http.oauth2Login(oauth2 -> oauth2
@@ -66,6 +70,21 @@ public class SecurityConfig {
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     http.addFilterBefore(new JwtAuthFilter(tokenService), OAuth2AuthorizationRequestRedirectFilter.class);
     return http.build();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration corsConfiguration = new CorsConfiguration();
+    corsConfiguration.addAllowedOriginPattern("*");
+    corsConfiguration.addAllowedHeader("*");
+    corsConfiguration.addExposedHeader("*");
+    corsConfiguration
+        .setAllowedMethods(Arrays.asList("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE"));
+    corsConfiguration.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", corsConfiguration);
+    return source;
   }
 
   private boolean isLocalMode() {

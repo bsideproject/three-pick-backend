@@ -7,7 +7,9 @@ import com.bside.threepick.domain.account.dto.response.EmailAuthResponse;
 import com.bside.threepick.domain.account.service.AccountService;
 import io.swagger.annotations.ApiOperation;
 import java.net.URI;
+import javax.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/api/accounts")
 @RestController
@@ -34,7 +38,7 @@ public class AccountController {
 
   @ApiOperation(value = "이메일 인증코드 발송")
   @PostMapping("/{email}/auth")
-  public ResponseEntity sendEmailAuthCode(@PathVariable String email) {
+  public ResponseEntity sendEmailAuthCode(@PathVariable @Email(message = "이메일을 다시한번 확인해주세요.") String email) {
     accountService.sendEmailAuthCode(email);
     return ResponseEntity.ok()
         .build();
@@ -42,7 +46,8 @@ public class AccountController {
 
   @ApiOperation(value = "이메일 인증코드 검증")
   @GetMapping("/{email}/auth-check")
-  public ResponseEntity<EmailAuthResponse> emailAuth(@PathVariable String email, @RequestParam String code) {
+  public ResponseEntity<EmailAuthResponse> emailAuth(@PathVariable @Email(message = "이메일을 다시한번 확인해주세요.") String email,
+      @RequestParam String code) {
     return ResponseEntity.ok(new EmailAuthResponse(accountService.isAuthenticatedEmail(email, code)));
   }
 

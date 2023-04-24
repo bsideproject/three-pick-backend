@@ -1,6 +1,7 @@
 package com.bside.threepick.exception;
 
 import com.bside.threepick.common.ErrorCode;
+import javax.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice
 public class CommonExceptionHandler {
+
+  private static final int INDEX_MESSAGE = 1;
 
   @ExceptionHandler({CommonException.class})
   public ResponseEntity<ErrorMessage> common(CommonException ex) {
@@ -31,6 +34,15 @@ public class CommonExceptionHandler {
   public ResponseEntity<ErrorMessage> methodArgumentNotValid(MethodArgumentNotValidException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(new ErrorMessage(ex.getFieldError().getDefaultMessage(), ErrorCode.BAD_REQUEST.getCode(),
+            HttpStatus.BAD_REQUEST.value()));
+  }
+
+  @ExceptionHandler({ConstraintViolationException.class})
+  public ResponseEntity<ErrorMessage> pathVariableValid(ConstraintViolationException ex) {
+    String[] exMessages = ex.getMessage()
+        .split(":");
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ErrorMessage(exMessages[INDEX_MESSAGE].trim(), ErrorCode.BAD_REQUEST.getCode(),
             HttpStatus.BAD_REQUEST.value()));
   }
 
