@@ -28,23 +28,22 @@ public class RetrospectController {
   @ApiOperation("회고 조회")
   @ApiImplicitParam(name = "date", value = "yyyy-MM-dd")
   @GetMapping
-  public ResponseEntity<RetrospectResponse> getRetrospect(@RequestParam(name = "account-id") Long accountId,
+  public ResponseEntity<RetrospectResponse> findRetrospect(@RequestParam(name = "account-id") Long accountId,
       @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-    return ResponseEntity.ok(retrospectService.getRetrospectByAccountIdAndRetrospectDate(accountId, date));
+    return ResponseEntity.ok(retrospectService.findRetrospectByAccountIdAndRetrospectDate(accountId, date));
   }
 
   @ApiOperation("회고 등록")
   @PostMapping
   public ResponseEntity<RetrospectResponse> createRetrospect(
       @RequestBody CreateRetrospectRequest createRetrospectRequest) {
-    retrospectService.createRetrospect(createRetrospectRequest);
-    return ResponseEntity.ok(retrospectService.getRetrospectByAccountIdAndRetrospectDate(
-        createRetrospectRequest.getAccountId(), createRetrospectRequest.getRetrospectDate()));
+    return ResponseEntity.ok(retrospectService.createRetrospect(createRetrospectRequest));
   }
 
   @ApiOperation("회고 수정")
   @PutMapping
   public ResponseEntity<RetrospectResponse> updateRetrospect(@RequestBody UpdateRetrospect updateRetrospect) {
-    return ResponseEntity.ok(retrospectService.updateRetrospect(updateRetrospect));
+    retrospectService.updateRetrospect(updateRetrospect);
+    return ResponseEntity.ok(retrospectService.findRetrospectById(updateRetrospect.getRetrospectId()));
   }
 }

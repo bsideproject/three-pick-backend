@@ -25,6 +25,7 @@ public class AccountService {
   private final AccountMapper accountMapper;
   private final AccountValidator accountValidator;
 
+  @Transactional
   public AccountResponse signUp(SignUpRequest signUpRequest) {
     return AccountResponse.of(accountMapper.signUp(signUpRequest));
   }
@@ -40,6 +41,7 @@ public class AccountService {
     return code.equals(stringRedisTemplate.opsForValue().get(email));
   }
 
+  @Transactional
   public AccountResponse findAccountResponseById(Long accountId) {
     Account account = accountMapper.findById(accountId);
 
@@ -48,6 +50,7 @@ public class AccountService {
     return AccountResponse.of(account);
   }
 
+  @Transactional
   public Account authenticate(String email, String password) {
     Account account = accountMapper.authenticate(email, password);
 
@@ -56,6 +59,7 @@ public class AccountService {
     return account;
   }
 
+  @Transactional
   public void updateTimeValue(TimeValueRequest timeValueRequest) {
     accountValidator.updateTimeValue(timeValueRequest);
     accountRepository.findById(timeValueRequest.getAccountId())
@@ -68,6 +72,7 @@ public class AccountService {
         });
   }
 
+  @Transactional
   public void updateCoachMark(Long accountId) {
     accountRepository.findById(accountId)
         .ifPresent(Account::changeCoachMark);

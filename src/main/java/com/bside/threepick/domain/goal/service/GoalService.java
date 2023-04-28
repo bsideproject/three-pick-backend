@@ -31,6 +31,7 @@ public class GoalService {
     return GoalDayResponse.of(goalMapper.findById(goalId));
   }
 
+  @Transactional
   public GoalDayResponse createGoal(CreateGoalRequest createGoalRequest) {
     return GoalDayResponse.of(goalMapper.createGoal(createGoalRequest));
   }
@@ -55,6 +56,7 @@ public class GoalService {
     return new GoalYearMonthResponse(goalResponses);
   }
 
+  @Transactional
   public void updateGoal(UpdateGoalRequest updateGoalRequest) {
     goalValidator.updateGoal(updateGoalRequest);
 

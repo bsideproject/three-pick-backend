@@ -7,7 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RetrospectRepository extends JpaRepository<Retrospect, Long> {
 
-  Optional<Retrospect> getRetrospectByAccountIdAndRetrospectDate(Long accountId, LocalDate retrospectDate);
-
-  Optional<Retrospect> getRetrospectById(Long id);
+  Optional<Retrospect> findByAccountIdAndRetrospectDate(Long accountId, LocalDate retrospectDate);
 }
