@@ -5,11 +5,12 @@ import com.bside.threepick.domain.account.dto.request.TimeValueRequest;
 import com.bside.threepick.domain.account.dto.response.AccountResponse;
 import com.bside.threepick.domain.account.dto.response.EmailAuthResponse;
 import com.bside.threepick.domain.account.service.AccountService;
+import com.bside.threepick.domain.security.dto.response.Token;
+import com.bside.threepick.domain.security.service.TokenService;
 import io.swagger.annotations.ApiOperation;
-import java.net.URI;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/api/accounts")
@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountController {
 
   private final AccountService accountService;
+  private final TokenService tokenService;
 
   @ApiOperation(value = "사용자 정보 조회")
   @GetMapping("/{accountId}")
@@ -53,10 +54,11 @@ public class AccountController {
 
   @ApiOperation(value = "회원가입")
   @PostMapping
-  public ResponseEntity<AccountResponse> signup(@Validated @RequestBody SignUpRequest signUpRequest) {
+  public void signup(@Validated @RequestBody SignUpRequest signUpRequest, HttpServletResponse response) {
     AccountResponse accountResponse = accountService.signUp(signUpRequest);
-    return ResponseEntity.created(URI.create("/api/accounts/" + accountResponse.getEmail()))
-        .body(accountResponse);
+
+    Token token = tokenService.generateToken(accountResponse.getEmail(), accountResponse.getAccountId(), "ROLE_USER");
+    tokenService.responseToken(response, token);
   }
 
   @ApiOperation(value = "한 시간의 가치 수정")

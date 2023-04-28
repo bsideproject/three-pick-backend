@@ -5,13 +5,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -78,8 +79,13 @@ public class TokenService {
     return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("accountId", Long.class);
   }
 
-  public void responseToken(HttpServletResponse response, Token token) throws IOException {
-    response.sendRedirect(frontServerHost + "?auth=" + token.getAccessToken()
-        + "&refresh=" + token.getRefreshToken() + "account-id=" + token.getAccountId());
+  public void responseToken(HttpServletResponse response, Token token) {
+    response.setStatus(HttpStatus.SEE_OTHER.value());
+    response.setHeader(HttpHeaders.LOCATION, makeLocation(token));
+  }
+
+  private String makeLocation(Token token) {
+    return frontServerHost + "?auth=" + token.getAccessToken()
+        + "&refresh=" + token.getRefreshToken() + "&account-id=" + token.getAccountId();
   }
 }

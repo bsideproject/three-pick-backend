@@ -3,10 +3,12 @@ package com.bside.threepick.domain.goal.entity;
 import com.bside.threepick.common.ErrorCode;
 import com.bside.threepick.exception.EnumBindingException;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Weight {
   POINT_FIVE(0.5), ONE(1.0), TWO(2.0);
 
+  @JsonValue
   private double value;
 
   Weight(double weight) {
@@ -42,7 +44,7 @@ public enum Weight {
     return this.value == weight;
   }
 
-  public double getValue() {
+  public double value() {
     return value;
   }
 

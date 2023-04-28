@@ -89,7 +89,7 @@ public class Account extends BaseEntity {
   public void changeNextTimeValue(Long timeValue) {
     nextTimeValue = timeValue;
     nextTimeValueDate = LocalDate.now()
-        .plusDays(1l);
+        .plusDays(1L);
     changeCount++;
   }
 
@@ -142,10 +142,6 @@ public class Account extends BaseEntity {
 
   public LocalDateTime getLastLoginDate() {
     return lastLoginDate;
-  }
-
-  public LocalDate getNextTimeValueDate() {
-    return nextTimeValueDate;
   }
 
   public boolean isCoachMark() {

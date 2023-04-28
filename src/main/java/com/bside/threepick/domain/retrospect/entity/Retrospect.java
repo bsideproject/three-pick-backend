@@ -2,14 +2,16 @@ package com.bside.threepick.domain.retrospect.entity;
 
 import com.bside.threepick.common.BaseEntity;
 import java.time.LocalDate;
-import javax.persistence.*;
-
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import lombok.Builder;
 
 @Entity
 @Table(name = "retrospect")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 public class Retrospect extends BaseEntity {
 
   @Id
@@ -19,12 +21,17 @@ public class Retrospect extends BaseEntity {
   // TODO : Account 구현완료 시 연관관계 구현
   // @ManyToOne
   // @JoinColumn(name = "account_id")
-  @Column(name = "account_id", nullable = false)
+  @Column(name = "account_id", nullable = false, updatable = false)
   private Long accountId;
-  @Column(name = "content", nullable = false)
+
+  @Column(name = "content", nullable = false, updatable = true)
   private String content;
-  @Column(name = "retrospect_date", nullable = false)
+
+  @Column(name = "retrospect_date", nullable = false, updatable = false)
   private LocalDate retrospectDate;
+
+  protected Retrospect() {
+  }
 
   @Builder
   public Retrospect(Long accountId, String content, LocalDate retrospectDate) {
@@ -35,5 +42,21 @@ public class Retrospect extends BaseEntity {
 
   public void changeContent(String content) {
     this.content = content;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public Long getAccountId() {
+    return accountId;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public LocalDate getRetrospectDate() {
+    return retrospectDate;
   }
 }

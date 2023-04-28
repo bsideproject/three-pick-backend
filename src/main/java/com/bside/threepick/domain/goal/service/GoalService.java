@@ -4,18 +4,19 @@ import com.bside.threepick.common.ErrorCode;
 import com.bside.threepick.domain.account.service.AccountService;
 import com.bside.threepick.domain.goal.dto.request.CreateGoalRequest;
 import com.bside.threepick.domain.goal.dto.request.UpdateGoalRequest;
-import com.bside.threepick.domain.goal.dto.response.GoalResponse;
-import com.bside.threepick.domain.goal.dto.response.GoalResponses;
+import com.bside.threepick.domain.goal.dto.response.GoalDayResponse;
+import com.bside.threepick.domain.goal.dto.response.GoalDayResponses;
+import com.bside.threepick.domain.goal.dto.response.GoalYearMonthResponse;
 import com.bside.threepick.domain.goal.entity.Goal;
 import com.bside.threepick.domain.goal.entity.GoalStatus;
 import com.bside.threepick.domain.goal.entity.GoalType;
 import com.bside.threepick.domain.goal.entity.Weight;
-import com.bside.threepick.domain.goal.reposiroty.GoalQueryDslRepository;
 import com.bside.threepick.domain.goal.reposiroty.GoalRepository;
 import com.bside.threepick.exception.CreateGoalException;
 import com.bside.threepick.exception.EntityNotFoundException;
 import com.bside.threepick.exception.UpdateGoalException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +30,16 @@ public class GoalService {
 
   private final AccountService accountService;
   private final GoalRepository goalRepository;
-  private final GoalQueryDslRepository goalQueryDslRepository;
 
   @Transactional(readOnly = true)
-  public GoalResponse findGoalById(Long goalId) {
+  public GoalDayResponse findGoalById(Long goalId) {
     Goal goal = goalRepository.findById(goalId)
         .orElseThrow(
             () -> new EntityNotFoundException(ErrorCode.GOAL_NOT_FOUND, "존재하지 않는 목표 데이터에요. goalId: " + goalId));
-    return GoalResponse.of(goal);
+    return GoalDayResponse.of(goal);
   }
 
-  public GoalResponse createGoal(CreateGoalRequest createGoalRequest) {
+  public GoalDayResponse createGoal(CreateGoalRequest createGoalRequest) {
     Long timeValue = accountService.findAccountResponseById(createGoalRequest.getAccountId())
         .getTimeValue();
     if (timeValue == null) {
@@ -60,16 +60,27 @@ public class GoalService {
     Weight.isNullThenThrow(createGoalRequest.getWeight());
     GoalType.isNullThenThrow(createGoalRequest.getGoalType());
 
-    return GoalResponse.of(goalRepository.save(createGoalRequest.createGoal(timeValue)));
+    return GoalDayResponse.of(goalRepository.save(createGoalRequest.createGoal(timeValue)));
   }
 
   @Transactional(readOnly = true)
-  public GoalResponses findGoalsByAccountIdAndDate(Long accountId, LocalDate date) {
-    List<GoalResponse> goalResponses = goalQueryDslRepository.findGoalsByAccountIdAndDate(accountId, date)
+  public GoalDayResponses findGoalsByAccountIdAndDate(Long accountId, LocalDate date) {
+    List<GoalDayResponse> goalResponses = goalRepository.findGoalsDayWithoutDeleted(accountId, date)
         .stream()
-        .map(GoalResponse::of)
+        .map(GoalDayResponse::of)
         .collect(Collectors.toList());
-    return new GoalResponses(accountId, goalResponses);
+
+    return new GoalDayResponses(accountId, goalResponses);
+  }
+
+  @Transactional(readOnly = true)
+  public GoalYearMonthResponse findGoalsByAccountIdAndYearMonth(Long accountId, YearMonth yearMonth) {
+    List<GoalDayResponse> goalResponses = goalRepository.findGoalsMonthWithoutDeleted(accountId, yearMonth)
+        .stream()
+        .map(GoalDayResponse::of)
+        .collect(Collectors.toList());
+
+    return new GoalYearMonthResponse(goalResponses);
   }
 
   public void updateGoal(UpdateGoalRequest updateGoalRequest) {

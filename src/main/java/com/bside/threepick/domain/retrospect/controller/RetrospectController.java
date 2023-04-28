@@ -4,6 +4,7 @@ import com.bside.threepick.domain.retrospect.dto.request.CreateRetrospectRequest
 import com.bside.threepick.domain.retrospect.dto.request.UpdateRetrospect;
 import com.bside.threepick.domain.retrospect.dto.response.RetrospectResponse;
 import com.bside.threepick.domain.retrospect.service.RetrospectService;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class RetrospectController {
   private final RetrospectService retrospectService;
 
   @ApiOperation("회고 조회")
+  @ApiImplicitParam(name = "date", value = "yyyy-MM-dd")
   @GetMapping
   public ResponseEntity<RetrospectResponse> getRetrospect(@RequestParam(name = "account-id") Long accountId,
       @RequestParam(name = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {

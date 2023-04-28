@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class AccountResponse {
 
+  private Long accountId;
   private String email;
   private String nickName;
   private Long timeValue;
@@ -29,7 +30,7 @@ public class AccountResponse {
   private LocalDateTime modifiedDate;
 
   public static AccountResponse of(Account account) {
-    return new AccountResponse(account.getEmail(), account.getNickName(), account.getTimeValue(),
+    return new AccountResponse(account.getId(), account.getEmail(), account.getNickName(), account.getTimeValue(),
         account.getChangeCount(), account.isCoachMark(), account.getLastLoginDate(), account.getCreatedDate(),
         account.getModifiedDate());
   }

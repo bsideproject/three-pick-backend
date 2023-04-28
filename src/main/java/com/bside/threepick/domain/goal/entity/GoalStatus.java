@@ -27,4 +27,8 @@ public enum GoalStatus {
       throw new EnumBindingException(ErrorCode.BAD_REQUEST, "goalStatus[" + errorMsg + "] 중에 값이 없어요.");
     }
   }
+
+  public boolean isDone() {
+    return this == DONE;
+  }
 }
