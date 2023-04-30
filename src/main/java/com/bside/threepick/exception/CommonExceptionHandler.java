@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -33,7 +34,16 @@ public class CommonExceptionHandler {
   @ExceptionHandler({MethodArgumentNotValidException.class})
   public ResponseEntity<ErrorMessage> methodArgumentNotValid(MethodArgumentNotValidException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(new ErrorMessage(ex.getFieldError().getDefaultMessage(), ErrorCode.BAD_REQUEST.getCode(),
+        .body(new ErrorMessage(ex.getFieldError().getDefaultMessage() + "[" + ex.getFieldError().getField() + "]",
+            ErrorCode.BAD_REQUEST.getCode(),
+            HttpStatus.BAD_REQUEST.value()));
+  }
+
+  @ExceptionHandler({MissingServletRequestParameterException.class})
+  public ResponseEntity<ErrorMessage> missingServletRequestParameterValid(MissingServletRequestParameterException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ErrorMessage("요청값에 빠진 항목이 있어요. [" + ex.getParameterName() + "]",
+            ErrorCode.BAD_REQUEST.getCode(),
             HttpStatus.BAD_REQUEST.value()));
   }
 

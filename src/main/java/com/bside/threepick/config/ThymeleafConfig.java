@@ -1,5 +1,6 @@
 package com.bside.threepick.config;
 
+import java.nio.charset.StandardCharsets;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.TemplateEngine;
@@ -25,8 +26,8 @@ public class ThymeleafConfig {
     springResourceTemplateResolver.setPrefix("classpath:templates/");
     springResourceTemplateResolver.setSuffix(".html");
     springResourceTemplateResolver.setTemplateMode(TemplateMode.HTML);
-    springResourceTemplateResolver.setCharacterEncoding("UTF-8");
-    springResourceTemplateResolver.setCacheable(false);
+    springResourceTemplateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());
+    springResourceTemplateResolver.setCacheable(Boolean.FALSE);
 
     return springResourceTemplateResolver;
   }

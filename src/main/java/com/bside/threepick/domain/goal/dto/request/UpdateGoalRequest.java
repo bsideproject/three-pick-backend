@@ -3,6 +3,7 @@ package com.bside.threepick.domain.goal.dto.request;
 import com.bside.threepick.domain.goal.entity.GoalStatus;
 import com.bside.threepick.domain.goal.entity.Weight;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,10 +14,13 @@ import lombok.NoArgsConstructor;
 @Data
 public class UpdateGoalRequest {
 
+  @NotNull
   private Long accountId;
+
+  @NotNull
   private Long goalId;
 
-  @NotBlank(message = "content 값은 필수에요.")
+  @NotBlank
   private String content;
   private int hour;
   private int minute;
