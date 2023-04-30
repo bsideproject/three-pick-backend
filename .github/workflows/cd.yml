@@ -47,7 +47,7 @@ jobs:
         username: ${{ secrets.NPC_DEV_SERVER_USER }}
         password: ${{ secrets.NPC_DEV_SERVER_PASSWORD }}
         port: ${{ secrets.NPC_DEV_SERVER_PORT }}
-        source: "./build/libs/*.jar"
+        source: "./build/libs/*-SNAPSHOT.jar"
         target: "~/deploy"
 
     - name: Execute Server Init Script
