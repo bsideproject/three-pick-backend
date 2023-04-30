@@ -1,0 +1,106 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            clientId: {{CLIENT_ID}}
+            clientSecret: {{CLIENT_SECRET}}
+            clientName: Three Pick
+            redirectUri: http://localhost:8080/login/oauth2/code/kakao
+            authorizationGrantType: authorization_code
+            scope: openid, account_email, profile_nickname
+        provider:
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            issuerUri: https://kauth.kakao.com
+            userInfoUri: https://kapi.kakao.com/v1/oidc/userinfo
+            jwkSetUri: https://kauth.kakao.com/.well-known/jwks.json
+            userNameAttribute: email
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: threepick.contact@gmail.com
+    password: {{MAIL_PASSWORD}}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+
+security:
+  secret:
+    key: {{JWT_SECRET_KEY}}
+front:
+  server:
+    host: http://localhost:3000/oauth-kakao-check
+server:
+  port: 8088
+logging.level:
+  org.hibernate.SQL: debug
+
+
+---
+spring:
+  profiles:
+    active: local
+
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+  redis:
+    host: localhost
+    port: 6379
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test/
+    username: root
+    password: threepick
+logging.level:
+  org.hibernate.SQL: debug
+
+
+---
+spring:
+  profiles:
+    active: dev
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  redis:
+    host: localhost
+    port: 6379
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: {{DATABASE_URL}}
+    username: {{DATABASE_USERNAME}}
+    password: {{DATABASE_PASSWORD}}
+logging.level:
+  org.hibernate.SQL: info
+
