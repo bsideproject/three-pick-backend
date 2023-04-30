@@ -104,3 +104,7 @@ spring:
 logging.level:
   org.hibernate.SQL: info
 
+---
+spring:
+  profiles:
+    active: prod
