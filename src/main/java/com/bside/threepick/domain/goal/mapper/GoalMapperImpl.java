@@ -2,9 +2,15 @@ package com.bside.threepick.domain.goal.mapper;
 
 import com.bside.threepick.domain.account.service.AccountService;
 import com.bside.threepick.domain.goal.dto.request.CreateGoalRequest;
+import com.bside.threepick.domain.goal.dto.response.GoalDayResponse;
+import com.bside.threepick.domain.goal.dto.response.GoalDayResponses;
 import com.bside.threepick.domain.goal.entity.Goal;
 import com.bside.threepick.domain.goal.reposiroty.GoalRepository;
 import com.bside.threepick.domain.goal.validator.GoalValidator;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -29,5 +35,20 @@ public class GoalMapperImpl implements GoalMapper {
     Long timeValue = accountService.findAccountResponseById(createGoalRequest.getAccountId())
         .getTimeValue();
     return goalRepository.save(createGoalRequest.createGoal(timeValue));
+  }
+
+  @Override
+  public GoalDayResponses findGoalsByAccountIdAndDate(Long accountId, LocalDate date) {
+    List<GoalDayResponse> goalResponses = goalRepository.findGoalsDayWithoutDeleted(accountId, date)
+        .stream()
+        .map(GoalDayResponse::of)
+        .collect(Collectors.toList());
+
+    if (goalResponses.size() == 0) {
+      Long timeValue = accountService.findAccountResponseById(accountId).getTimeValue();
+      return new GoalDayResponses(accountId, timeValue, new ArrayList<>());
+    }
+
+    return new GoalDayResponses(accountId, goalResponses);
   }
 }

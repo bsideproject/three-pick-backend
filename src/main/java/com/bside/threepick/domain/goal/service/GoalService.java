@@ -38,12 +38,7 @@ public class GoalService {
 
   @Transactional(readOnly = true)
   public GoalDayResponses findGoalsByAccountIdAndDate(Long accountId, LocalDate date) {
-    List<GoalDayResponse> goalResponses = goalRepository.findGoalsDayWithoutDeleted(accountId, date)
-        .stream()
-        .map(GoalDayResponse::of)
-        .collect(Collectors.toList());
-
-    return new GoalDayResponses(accountId, goalResponses);
+    return goalMapper.findGoalsByAccountIdAndDate(accountId, date);
   }
 
   @Transactional(readOnly = true)

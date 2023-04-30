@@ -17,6 +17,12 @@ public class GoalDayResponses {
   private int doneValue;
   private List<GoalDayResponse> goalResponses;
 
+  public GoalDayResponses(Long accountId, Long timeValue, List<GoalDayResponse> goalResponses) {
+    this.accountId = accountId;
+    this.timeValue = timeValue;
+    this.goalResponses = goalResponses;
+  }
+
   public GoalDayResponses(Long accountId, List<GoalDayResponse> goalResponses) {
     this.accountId = accountId;
     this.timeValue = goalResponses.get(0)
