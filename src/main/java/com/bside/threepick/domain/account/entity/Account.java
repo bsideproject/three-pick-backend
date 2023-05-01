@@ -116,6 +116,10 @@ public class Account extends BaseEntity {
     }
   }
 
+  public void changeTempPassword(String encodedPassword) {
+    this.password = encodedPassword;
+  }
+
   public Long getId() {
     return id;
   }

@@ -84,7 +84,7 @@ public class TokenService {
     response.setHeader(HttpHeaders.LOCATION, makeLocation(token));
   }
 
-  private String makeLocation(Token token) {
+  public String makeLocation(Token token) {
     return frontServerHost + "?auth=" + token.getAccessToken()
         + "&refresh=" + token.getRefreshToken() + "&account-id=" + token.getAccountId();
   }

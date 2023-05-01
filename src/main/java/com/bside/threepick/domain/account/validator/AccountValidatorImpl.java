@@ -50,6 +50,13 @@ public class AccountValidatorImpl implements AccountValidator {
   }
 
   @Override
+  public void findByEmail(String email) {
+    accountRepository.findByEmail(email)
+        .orElseThrow(
+            () -> new EntityNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND, "계정이 존재하지 않아요. email: " + email));
+  }
+
+  @Override
   public void authenticate(String email, String password) {
     Account account = accountRepository.findByEmailAndSignUpType(email, SignUpType.BASIC)
         .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND, "계정이 존재하지 않아요. email: " + email));

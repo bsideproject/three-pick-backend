@@ -1,16 +1,20 @@
 package com.bside.threepick.domain.account.service;
 
 import com.bside.threepick.domain.account.dto.request.SignUpRequest;
+import com.bside.threepick.domain.account.dto.request.TempPasswordRequest;
 import com.bside.threepick.domain.account.dto.request.TimeValueRequest;
 import com.bside.threepick.domain.account.dto.response.AccountResponse;
 import com.bside.threepick.domain.account.entity.Account;
 import com.bside.threepick.domain.account.event.EmailAuthRequestedEvent;
+import com.bside.threepick.domain.account.event.TempPasswordRequestedEvent;
 import com.bside.threepick.domain.account.mapper.AccountMapper;
 import com.bside.threepick.domain.account.reposiroty.AccountRepository;
 import com.bside.threepick.domain.account.validator.AccountValidator;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,7 @@ public class AccountService {
   private final ApplicationEventPublisher eventPublisher;
   private final AccountMapper accountMapper;
   private final AccountValidator accountValidator;
+  private final PasswordEncoder passwordEncoder;
 
   @Transactional
   public AccountResponse signUp(SignUpRequest signUpRequest) {
@@ -47,6 +52,12 @@ public class AccountService {
 
     account.checkNextTimeValue();
 
+    return AccountResponse.of(account);
+  }
+
+  @Transactional(readOnly = true)
+  public AccountResponse findAccountResponseByEmail(String email) {
+    Account account = accountMapper.findByEmail(email);
     return AccountResponse.of(account);
   }
 
@@ -76,5 +87,22 @@ public class AccountService {
   public void updateCoachMark(Long accountId) {
     accountRepository.findById(accountId)
         .ifPresent(Account::changeCoachMark);
+  }
+
+  @Transactional
+  public void updateTempPassword(TempPasswordRequest tempPasswordRequest) {
+    Account account = accountMapper.findByEmail(tempPasswordRequest.getEmail());
+    String newPassword = makeUUID();
+    String encodedPassword = passwordEncoder.encode(newPassword);
+    account.changeTempPassword(encodedPassword);
+    eventPublisher.publishEvent(new TempPasswordRequestedEvent(account.getEmail(), newPassword));
+  }
+
+  private String makeUUID() {
+    String authCode = UUID.randomUUID()
+        .toString()
+        .substring(0, 6)
+        .toUpperCase();
+    return authCode;
   }
 }

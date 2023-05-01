@@ -9,5 +9,7 @@ public interface AccountMapper {
 
   Account findById(Long accountId);
 
+  Account findByEmail(String email);
+
   Account authenticate(String email, String password);
 }

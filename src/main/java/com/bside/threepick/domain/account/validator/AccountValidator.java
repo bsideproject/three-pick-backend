@@ -16,4 +16,6 @@ public interface AccountValidator {
   void passwordMatches(String password, String accountPassword);
 
   void updateTimeValue(TimeValueRequest timeValueRequest);
+
+  void findByEmail(String email);
 }

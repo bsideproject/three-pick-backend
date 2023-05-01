@@ -34,6 +34,14 @@ public class AccountMapperImpl implements AccountMapper {
   }
 
   @Override
+  public Account findByEmail(String email) {
+    accountValidator.findByEmail(email);
+
+    return accountRepository.findByEmail(email)
+        .get();
+  }
+
+  @Override
   public Account authenticate(String email, String password) {
     accountValidator.authenticate(email, password);
 
