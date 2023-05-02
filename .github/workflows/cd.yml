@@ -34,7 +34,6 @@ jobs:
 
   pull_deploy:
     name: Connect server ssh and pull from container registry
-    needs: build_dockerpush
     runs-on: ubuntu-latest
     steps:
       - name: connect ssh
