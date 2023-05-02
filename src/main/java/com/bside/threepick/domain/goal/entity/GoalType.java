@@ -27,4 +27,8 @@ public enum GoalType {
       throw new EnumBindingException(ErrorCode.BAD_REQUEST, "goalType[" + errorMsg + "] 중에 값이 없어요.");
     }
   }
+
+  public boolean isToday() {
+    return this == TODAY;
+  }
 }

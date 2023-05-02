@@ -2,6 +2,7 @@ package com.bside.threepick.domain.goal.dto.response;
 
 import com.bside.threepick.domain.goal.entity.Goal;
 import com.bside.threepick.domain.goal.entity.GoalStatus;
+import com.bside.threepick.domain.goal.entity.GoalType;
 import com.bside.threepick.domain.goal.entity.Weight;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
@@ -24,13 +25,14 @@ public class GoalDayResponse {
   private int hour;
   private int minute;
   private Weight weight;
+  private GoalType goalType;
   private LocalDate goalDate;
 
   public static GoalDayResponse of(Goal goal) {
 
     return new GoalDayResponse(goal.getId(), goal.getAccountId(), goal.getTimeValue(), goal.getContent(),
         goal.getValue().value(), goal.getGoalStatus(), goal.getHour(), goal.getMinute(), goal.getWeight(),
-        goal.getGoalDate());
+        goal.getGoalType(), goal.getGoalDate());
   }
 
   @JsonIgnore

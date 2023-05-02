@@ -12,6 +12,7 @@ public class Value {
   private BigDecimal value;
 
   public Value() {
+    this.value = new BigDecimal(0);
   }
 
   public Value(int hour, int minute, Long timeValue, Weight weight) {

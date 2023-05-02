@@ -36,19 +36,21 @@ public class GoalValidatorImpl implements GoalValidator {
       throw new CreateGoalException(ErrorCode.TIME_VALUE_NOT_FOUND);
     }
 
-    int limitSize = GoalType.TODAY == createGoalRequest.getGoalType() ? 2 : 0;
-    if (goalRepository
-        .findGoalsByAccountIdAndGoalType(createGoalRequest.getAccountId(), createGoalRequest.getGoalType())
+    GoalType goalType = createGoalRequest.getGoalType();
+    GoalType.isNullThenThrow(goalType);
+    int limitSize = GoalType.TODAY == goalType ? 2 : 0;
+    if (goalRepository.findGoalsByAccountIdAndGoalType(createGoalRequest.getAccountId(), goalType)
         .size() > limitSize) {
       throw new CreateGoalException(ErrorCode.GOAL_NOT_CREATED);
     }
 
-    if (1 > createGoalRequest.getHour() && createGoalRequest.getMinute() < 1) {
-      throw new CreateGoalException(ErrorCode.GOAL_NOT_CREATED, "목표시간을 설정해 주세요.");
-    }
+    if (goalType.isToday()) {
+      if (1 > createGoalRequest.getHour() && createGoalRequest.getMinute() < 1) {
+        throw new CreateGoalException(ErrorCode.GOAL_NOT_CREATED, "목표시간을 설정해 주세요.");
+      }
 
-    Weight.isNullThenThrow(createGoalRequest.getWeight());
-    GoalType.isNullThenThrow(createGoalRequest.getGoalType());
+      Weight.isNullThenThrow(createGoalRequest.getWeight());
+    }
   }
 
   @Override

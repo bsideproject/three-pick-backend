@@ -4,6 +4,7 @@ import static com.bside.threepick.domain.goal.entity.QGoal.goal;
 
 import com.bside.threepick.domain.goal.entity.Goal;
 import com.bside.threepick.domain.goal.entity.GoalStatus;
+import com.bside.threepick.domain.goal.entity.GoalType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
@@ -16,11 +17,24 @@ public class GoalRepositoryImpl implements GoalRepositoryQueryDsl {
 
   private final JPAQueryFactory queryFactory;
 
+  @Override
   public List<Goal> findGoalsDayWithoutDeleted(Long accountId, LocalDate date) {
     return findGoalsWithoutDeleted(accountId, date, null);
   }
 
-  public List<Goal> findGoalsMonthWithoutDeleted(Long accountId, YearMonth yearMonth) {
+  @Override
+  public Goal findGoalMonthWithoutDeleted(Long accountId, YearMonth yearMonth) {
+    return queryFactory.selectFrom(goal)
+        .where(
+            accountIdEq(accountId),
+            goalTypeIn(GoalType.MONTH),
+            goalDateGoeAndLt(yearMonth),
+            goalStatusIn(GoalStatus.DOING, GoalStatus.DONE)
+        ).fetchOne();
+  }
+
+  @Override
+  public List<Goal> findGoalsRewardWithoutDeleted(Long accountId, YearMonth yearMonth) {
     return findGoalsWithoutDeleted(accountId, null, yearMonth);
   }
 
@@ -28,10 +42,15 @@ public class GoalRepositoryImpl implements GoalRepositoryQueryDsl {
     return queryFactory.selectFrom(goal)
         .where(
             accountIdEq(accountId),
+            goalTypeIn(GoalType.TODAY),
             goalDateEq(date),
             goalDateGoeAndLt(yearMonth),
             goalStatusIn(GoalStatus.DOING, GoalStatus.DONE)
         ).fetch();
+  }
+
+  private BooleanExpression goalTypeIn(GoalType... goalTypes) {
+    return goalTypes != null ? goal.goalType.in(goalTypes) : null;
   }
 
   private BooleanExpression goalStatusIn(GoalStatus... goalStatuses) {

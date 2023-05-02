@@ -9,5 +9,7 @@ public interface GoalRepositoryQueryDsl {
 
   List<Goal> findGoalsDayWithoutDeleted(Long accountId, LocalDate date);
 
-  List<Goal> findGoalsMonthWithoutDeleted(Long accountId, YearMonth yearMonth);
+  List<Goal> findGoalsRewardWithoutDeleted(Long accountId, YearMonth yearMonth);
+
+  Goal findGoalMonthWithoutDeleted(Long accountId, YearMonth yearMonth);
 }

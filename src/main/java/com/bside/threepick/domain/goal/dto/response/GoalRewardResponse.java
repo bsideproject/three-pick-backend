@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
-public class GoalYearMonthResponse {
+public class GoalRewardResponse {
 
   private int doneValue;
   private int missValue;
@@ -22,7 +22,7 @@ public class GoalYearMonthResponse {
   private int doneHour;
   private Map<String, List<GoalDayResponse>> doneGoalWithDays;
 
-  public GoalYearMonthResponse(List<GoalDayResponse> goals) {
+  public GoalRewardResponse(List<GoalDayResponse> goals) {
     this.doneValue = makeDoneValue(goals);
     this.missValue = makeTotalValue(goals) - doneValue;
     this.doneHour = makeDoneHour(goals);

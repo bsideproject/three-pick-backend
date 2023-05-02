@@ -25,7 +25,11 @@ public class CreateGoalRequest {
   private Weight weight;
   private GoalType goalType;
 
-  public Goal createGoal(Long timeValue) {
+  public Goal createGoalToday(Long timeValue) {
     return new Goal(accountId, content, timeValue, hour, minute, weight, goalType);
+  }
+
+  public Goal createGoalMonth(Long timeValue) {
+    return new Goal(accountId, content, timeValue, goalType);
   }
 }

@@ -41,7 +41,7 @@ public class Goal extends BaseEntity {
   @Column(name = "minute", nullable = false, updatable = true)
   private int minute;
 
-  @Column(name = "weight", nullable = false, updatable = true)
+  @Column(name = "weight", nullable = true, updatable = true)
   @Enumerated(EnumType.STRING)
   private Weight weight;
 
@@ -53,6 +53,16 @@ public class Goal extends BaseEntity {
   private GoalType goalType;
 
   protected Goal() {
+  }
+
+  public Goal(Long accountId, String content, Long timeValue, GoalType goalType) {
+    this.accountId = accountId;
+    this.content = content;
+    this.timeValue = timeValue;
+    this.value = new Value();
+    this.goalStatus = GoalStatus.DOING;
+    this.goalDate = LocalDate.now();
+    this.goalType = goalType;
   }
 
   public Goal(Long accountId, String content, Long timeValue, int hour, int minute, Weight weight, GoalType goalType) {
@@ -115,5 +125,9 @@ public class Goal extends BaseEntity {
 
   public LocalDate getGoalDate() {
     return goalDate;
+  }
+
+  public GoalType getGoalType() {
+    return goalType;
   }
 }

@@ -4,7 +4,7 @@ import com.bside.threepick.domain.goal.dto.request.CreateGoalRequest;
 import com.bside.threepick.domain.goal.dto.request.UpdateGoalRequest;
 import com.bside.threepick.domain.goal.dto.response.GoalDayResponse;
 import com.bside.threepick.domain.goal.dto.response.GoalDayResponses;
-import com.bside.threepick.domain.goal.dto.response.GoalYearMonthResponse;
+import com.bside.threepick.domain.goal.dto.response.GoalRewardResponse;
 import com.bside.threepick.domain.goal.service.GoalService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -38,12 +38,12 @@ public class GoalController {
     return ResponseEntity.ok(goalService.findGoalsByAccountIdAndDate(accountId, date));
   }
 
-  @ApiOperation(value = "목표 조회(Month)")
+  @ApiOperation(value = "목표 조회(Reward)")
   @ApiImplicitParam(name = "year-month", value = "yyyy-MM")
-  @GetMapping("/{accountId}/year-month")
-  public ResponseEntity<GoalYearMonthResponse> findGoalMonthByAccountId(@PathVariable Long accountId,
+  @GetMapping("/{accountId}/reward")
+  public ResponseEntity<GoalRewardResponse> findRewardByAccountId(@PathVariable Long accountId,
       @RequestParam(name = "year-month") @DateTimeFormat(pattern = "yyyy-MM") YearMonth yearMonth) {
-    return ResponseEntity.ok(goalService.findGoalsByAccountIdAndYearMonth(accountId, yearMonth));
+    return ResponseEntity.ok(goalService.findRewardByAccountIdAndYearMonth(accountId, yearMonth));
   }
 
   @ApiOperation(value = "목표 등록")

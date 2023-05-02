@@ -34,7 +34,11 @@ public class GoalMapperImpl implements GoalMapper {
     goalValidator.createGoal(createGoalRequest);
     Long timeValue = accountService.findAccountResponseById(createGoalRequest.getAccountId())
         .getTimeValue();
-    return goalRepository.save(createGoalRequest.createGoal(timeValue));
+
+    if (createGoalRequest.getGoalType().isToday()) {
+      return goalRepository.save(createGoalRequest.createGoalToday(timeValue));
+    }
+    return goalRepository.save(createGoalRequest.createGoalMonth(timeValue));
   }
 
   @Override
@@ -48,7 +52,6 @@ public class GoalMapperImpl implements GoalMapper {
       Long timeValue = accountService.findAccountResponseById(accountId).getTimeValue();
       return new GoalDayResponses(accountId, timeValue, new ArrayList<>());
     }
-
     return new GoalDayResponses(accountId, goalResponses);
   }
 }

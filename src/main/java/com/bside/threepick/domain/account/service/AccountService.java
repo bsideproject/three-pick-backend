@@ -4,12 +4,16 @@ import com.bside.threepick.domain.account.dto.request.SignUpRequest;
 import com.bside.threepick.domain.account.dto.request.TempPasswordRequest;
 import com.bside.threepick.domain.account.dto.request.TimeValueRequest;
 import com.bside.threepick.domain.account.dto.response.AccountResponse;
+import com.bside.threepick.domain.account.dto.response.GoalMonthResponse;
 import com.bside.threepick.domain.account.entity.Account;
 import com.bside.threepick.domain.account.event.EmailAuthRequestedEvent;
 import com.bside.threepick.domain.account.event.TempPasswordRequestedEvent;
 import com.bside.threepick.domain.account.mapper.AccountMapper;
 import com.bside.threepick.domain.account.reposiroty.AccountRepository;
 import com.bside.threepick.domain.account.validator.AccountValidator;
+import com.bside.threepick.domain.goal.entity.Goal;
+import com.bside.threepick.domain.goal.reposiroty.GoalRepository;
+import java.time.YearMonth;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -24,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService {
 
   private final AccountRepository accountRepository;
+  private final GoalRepository goalRepository;
   private final StringRedisTemplate stringRedisTemplate;
   private final ApplicationEventPublisher eventPublisher;
   private final AccountMapper accountMapper;
@@ -52,14 +57,25 @@ public class AccountService {
 
     account.checkNextTimeValue();
 
-    return AccountResponse.of(account);
+    return new AccountResponse(account, createGoalMonthResponse(accountId));
   }
 
   @Transactional(readOnly = true)
   public AccountResponse findAccountResponseByEmail(String email) {
     Account account = accountMapper.findByEmail(email);
-    return AccountResponse.of(account);
+    return new AccountResponse(account, createGoalMonthResponse(account.getId()));
   }
+
+  private GoalMonthResponse createGoalMonthResponse(Long accountId) {
+    GoalMonthResponse goalMonthResponse = null;
+    YearMonth yearMonth = YearMonth.now();
+    Goal goalMonth = goalRepository.findGoalMonthWithoutDeleted(accountId, yearMonth);
+    if (goalMonth != null) {
+      goalMonthResponse = new GoalMonthResponse(goalMonth, yearMonth);
+    }
+    return goalMonthResponse;
+  }
+
 
   @Transactional
   public Account authenticate(String email, String password) {
@@ -99,10 +115,9 @@ public class AccountService {
   }
 
   private String makeUUID() {
-    String authCode = UUID.randomUUID()
+    return UUID.randomUUID()
         .toString()
         .substring(0, 6)
         .toUpperCase();
-    return authCode;
   }
 }

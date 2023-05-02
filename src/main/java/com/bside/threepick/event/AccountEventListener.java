@@ -73,11 +73,10 @@ public class AccountEventListener {
   }
 
   private String makeUUID() {
-    String authCode = UUID.randomUUID()
+    return UUID.randomUUID()
         .toString()
         .substring(0, 6)
         .toUpperCase();
-    return authCode;
   }
 
   @Data

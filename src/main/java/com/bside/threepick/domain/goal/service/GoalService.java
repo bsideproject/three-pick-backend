@@ -4,7 +4,7 @@ import com.bside.threepick.domain.goal.dto.request.CreateGoalRequest;
 import com.bside.threepick.domain.goal.dto.request.UpdateGoalRequest;
 import com.bside.threepick.domain.goal.dto.response.GoalDayResponse;
 import com.bside.threepick.domain.goal.dto.response.GoalDayResponses;
-import com.bside.threepick.domain.goal.dto.response.GoalYearMonthResponse;
+import com.bside.threepick.domain.goal.dto.response.GoalRewardResponse;
 import com.bside.threepick.domain.goal.entity.Goal;
 import com.bside.threepick.domain.goal.mapper.GoalMapper;
 import com.bside.threepick.domain.goal.reposiroty.GoalRepository;
@@ -42,13 +42,13 @@ public class GoalService {
   }
 
   @Transactional(readOnly = true)
-  public GoalYearMonthResponse findGoalsByAccountIdAndYearMonth(Long accountId, YearMonth yearMonth) {
-    List<GoalDayResponse> goalResponses = goalRepository.findGoalsMonthWithoutDeleted(accountId, yearMonth)
+  public GoalRewardResponse findRewardByAccountIdAndYearMonth(Long accountId, YearMonth yearMonth) {
+    List<GoalDayResponse> goalResponses = goalRepository.findGoalsRewardWithoutDeleted(accountId, yearMonth)
         .stream()
         .map(GoalDayResponse::of)
         .collect(Collectors.toList());
 
-    return new GoalYearMonthResponse(goalResponses);
+    return new GoalRewardResponse(goalResponses);
   }
 
   @Transactional
