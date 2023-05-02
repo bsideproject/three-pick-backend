@@ -21,7 +21,7 @@ jobs:
         with:
           registry: ${{ secrets.NCP_CONTAINER_REGISTRY }}
           username: ${{ secrets.NCP_ACCESS_KEY }}
-          password: ${{ secrets.NCP_SECRET_KEY }}
+          password: ${{ secrets.NCP_SECRET_KEY }} 
       - name: build and push
         uses: docker/build-push-action@v3
         with:
@@ -29,12 +29,12 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name:latest
-          cache-from: type=registry,ref=${{ secrets.NCP_CONTAINER_REGISTRY }}/threepick-backend:latest
+          cache-from: type=registry,ref=${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name:latest
           cache-to: type=inline
 
-  pull_from_registry:
+  pull_deploy:
     name: Connect server ssh and pull from container registry
-    needs: push_to_registry
+    needs: build_dockerpush
     runs-on: ubuntu-latest
     steps:
       - name: connect ssh
@@ -48,4 +48,6 @@ jobs:
             docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name
             docker stop $(docker ps -a -q)
             docker rm $(docker ps -a -q)
-            docker run -d -p 80:8080 ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name
+            docker run -d -p 8080:80 ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name
+            docker image prune -f
+
