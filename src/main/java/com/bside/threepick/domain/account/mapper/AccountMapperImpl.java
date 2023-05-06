@@ -1,5 +1,6 @@
 package com.bside.threepick.domain.account.mapper;
 
+import com.bside.threepick.domain.account.dto.request.PasswordRequest;
 import com.bside.threepick.domain.account.dto.request.SignUpRequest;
 import com.bside.threepick.domain.account.entity.Account;
 import com.bside.threepick.domain.account.entity.SignUpType;
@@ -47,5 +48,12 @@ public class AccountMapperImpl implements AccountMapper {
 
     return accountRepository.findByEmailAndSignUpType(email, SignUpType.BASIC)
         .get();
+  }
+
+  @Override
+  public Account updatePassword(PasswordRequest passwordRequest) {
+    accountValidator.updatePassword(passwordRequest);
+
+    return findById(passwordRequest.getAccountId());
   }
 }

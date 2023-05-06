@@ -30,7 +30,7 @@ public class GoalController {
 
   private final GoalService goalService;
 
-  @ApiOperation(value = "목표 조회(Day)")
+  @ApiOperation("목표 조회(Day)")
   @ApiImplicitParam(name = "date", value = "yyyy-MM-dd")
   @GetMapping("/{accountId}")
   public ResponseEntity<GoalDayResponses> findGoalDayByAccountId(@PathVariable Long accountId,
@@ -38,7 +38,7 @@ public class GoalController {
     return ResponseEntity.ok(goalService.findGoalsByAccountIdAndDate(accountId, date));
   }
 
-  @ApiOperation(value = "목표 조회(Reward)")
+  @ApiOperation("목표 조회(Reward)")
   @ApiImplicitParam(name = "year-month", value = "yyyy-MM")
   @GetMapping("/{accountId}/reward")
   public ResponseEntity<GoalRewardResponse> findRewardByAccountId(@PathVariable Long accountId,
@@ -46,13 +46,13 @@ public class GoalController {
     return ResponseEntity.ok(goalService.findRewardByAccountIdAndYearMonth(accountId, yearMonth));
   }
 
-  @ApiOperation(value = "목표 등록")
+  @ApiOperation("목표 등록")
   @PostMapping
   public ResponseEntity<GoalDayResponse> createGoal(@Validated @RequestBody CreateGoalRequest createGoalRequest) {
     return ResponseEntity.ok(goalService.createGoal(createGoalRequest));
   }
 
-  @ApiOperation(value = "목표 수정")
+  @ApiOperation("목표 수정")
   @PutMapping
   public ResponseEntity<GoalDayResponse> updateGoal(@Validated @RequestBody UpdateGoalRequest updateGoalRequest) {
     goalService.updateGoal(updateGoalRequest);

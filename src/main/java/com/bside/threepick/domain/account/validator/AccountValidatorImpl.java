@@ -1,6 +1,7 @@
 package com.bside.threepick.domain.account.validator;
 
 import com.bside.threepick.common.ErrorCode;
+import com.bside.threepick.domain.account.dto.request.PasswordRequest;
 import com.bside.threepick.domain.account.dto.request.SignUpRequest;
 import com.bside.threepick.domain.account.dto.request.TimeValueRequest;
 import com.bside.threepick.domain.account.entity.Account;
@@ -57,16 +58,25 @@ public class AccountValidatorImpl implements AccountValidator {
   }
 
   @Override
+  public void updatePassword(PasswordRequest passwordRequest) {
+    findById(passwordRequest.getAccountId());
+    Account account = accountRepository.findById(passwordRequest.getAccountId())
+        .get();
+    passwordMatches(passwordRequest.getPassword(), account.getPassword());
+  }
+
+  @Override
   public void authenticate(String email, String password) {
     Account account = accountRepository.findByEmailAndSignUpType(email, SignUpType.BASIC)
         .orElseThrow(() -> new EntityNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND, "계정이 존재하지 않아요. email: " + email));
+    account.isDeletedThenThrow();
     passwordMatches(password, account.getPassword());
   }
 
   @Override
   public void passwordMatches(String password, String accountPassword) {
     if (!passwordEncoder.matches(password, accountPassword)) {
-      throw new UnauthorizedException(ErrorCode.UNAUTHORIZED, "비밀번호를 확인해주세요.");
+      throw new UnauthorizedException(ErrorCode.UNAUTHORIZED, "아이디 혹은 비밀번호를 확인해주세요.");
     }
   }
 

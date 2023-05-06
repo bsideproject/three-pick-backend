@@ -1,5 +1,7 @@
 package com.bside.threepick.domain.account.service;
 
+import com.bside.threepick.domain.account.dto.request.NickNameRequest;
+import com.bside.threepick.domain.account.dto.request.PasswordRequest;
 import com.bside.threepick.domain.account.dto.request.SignUpRequest;
 import com.bside.threepick.domain.account.dto.request.TempPasswordRequest;
 import com.bside.threepick.domain.account.dto.request.TimeValueRequest;
@@ -119,5 +121,24 @@ public class AccountService {
         .toString()
         .substring(0, 6)
         .toUpperCase();
+  }
+
+  @Transactional
+  public void updateNickname(NickNameRequest nickNameRequest) {
+    Account account = accountMapper.findById(nickNameRequest.getAccountId());
+    account.changeNickName(nickNameRequest.getNickName());
+  }
+
+  @Transactional
+  public void updatePassword(PasswordRequest passwordRequest) {
+    Account account = accountMapper.updatePassword(passwordRequest);
+    String newPassword = passwordEncoder.encode(passwordRequest.getNewPassword());
+    account.changePassword(newPassword);
+  }
+
+  @Transactional
+  public void deleteAccount(Long accountId) {
+    Account account = accountMapper.findById(accountId);
+    account.delete();
   }
 }

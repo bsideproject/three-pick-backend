@@ -1,6 +1,7 @@
 package com.bside.threepick.exception;
 
 import com.bside.threepick.common.ErrorCode;
+import io.jsonwebtoken.JwtException;
 import javax.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,16 +36,14 @@ public class CommonExceptionHandler {
   public ResponseEntity<ErrorMessage> methodArgumentNotValid(MethodArgumentNotValidException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(new ErrorMessage(ex.getFieldError().getDefaultMessage() + "[" + ex.getFieldError().getField() + "]",
-            ErrorCode.BAD_REQUEST.getCode(),
-            HttpStatus.BAD_REQUEST.value()));
+            ErrorCode.BAD_REQUEST.getCode(), HttpStatus.BAD_REQUEST.value()));
   }
 
   @ExceptionHandler({MissingServletRequestParameterException.class})
   public ResponseEntity<ErrorMessage> missingServletRequestParameterValid(MissingServletRequestParameterException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(new ErrorMessage("요청값에 빠진 항목이 있어요. [" + ex.getParameterName() + "]",
-            ErrorCode.BAD_REQUEST.getCode(),
-            HttpStatus.BAD_REQUEST.value()));
+            ErrorCode.BAD_REQUEST.getCode(), HttpStatus.BAD_REQUEST.value()));
   }
 
   @ExceptionHandler({ConstraintViolationException.class})
@@ -53,6 +52,13 @@ public class CommonExceptionHandler {
         .split(":");
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(new ErrorMessage(exMessages[INDEX_MESSAGE].trim(), ErrorCode.BAD_REQUEST.getCode(),
+            HttpStatus.BAD_REQUEST.value()));
+  }
+
+  @ExceptionHandler({JwtException.class})
+  public ResponseEntity<ErrorMessage> jwtValid(JwtException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ErrorMessage(ErrorCode.UNAUTHORIZED.getMessage(), ErrorCode.UNAUTHORIZED.getCode(),
             HttpStatus.BAD_REQUEST.value()));
   }
 

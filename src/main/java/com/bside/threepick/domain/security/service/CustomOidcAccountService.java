@@ -4,6 +4,7 @@ import com.bside.threepick.domain.account.entity.Account;
 import com.bside.threepick.domain.account.entity.AccountStatus;
 import com.bside.threepick.domain.account.entity.SignUpType;
 import com.bside.threepick.domain.account.reposiroty.AccountRepository;
+import com.bside.threepick.exception.EntityNotFoundException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,21 +24,30 @@ public class CustomOidcAccountService implements OAuth2UserService<OidcUserReque
 
   @Override
   public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
-
     OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService = new OidcUserService();
     OidcUser oidcUser = oidcUserService.loadUser(userRequest);
-    accountRepository.findByEmail(oidcUser.getEmail())
-        .ifPresentOrElse(Account::changeLastLoginDate, () -> {
-          String email = oidcUser.getAttribute("email");
-          String nickname = oidcUser.getAttribute("nickname");
-          String password = UUID.randomUUID()
-              .toString()
-              .replace("-", "")
-              .substring(0, 20);
 
-          password = passwordEncoder.encode(password);
-          accountRepository.save(new Account(email, password, nickname, SignUpType.KAKAO, AccountStatus.ACTIVE));
-        });
+    try {
+      accountRepository.findByEmail(oidcUser.getEmail())
+          .ifPresentOrElse(account -> {
+            account.isDeletedThenThrow();
+            account.changeLastLoginDate();
+          }, () -> {
+            String email = oidcUser.getAttribute("email");
+            String nickname = oidcUser.getAttribute("nickname");
+            String password = passwordEncoder.encode(makeRandomPassword());
+            accountRepository.save(new Account(email, password, nickname, SignUpType.KAKAO, AccountStatus.ACTIVE));
+          });
+    } catch (EntityNotFoundException ex) {
+      return null;
+    }
     return oidcUser;
+  }
+
+  private String makeRandomPassword() {
+    return UUID.randomUUID()
+        .toString()
+        .replace("-", "")
+        .substring(0, 20);
   }
 }

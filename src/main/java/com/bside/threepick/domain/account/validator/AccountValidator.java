@@ -1,5 +1,6 @@
 package com.bside.threepick.domain.account.validator;
 
+import com.bside.threepick.domain.account.dto.request.PasswordRequest;
 import com.bside.threepick.domain.account.dto.request.SignUpRequest;
 import com.bside.threepick.domain.account.dto.request.TimeValueRequest;
 
@@ -18,4 +19,6 @@ public interface AccountValidator {
   void updateTimeValue(TimeValueRequest timeValueRequest);
 
   void findByEmail(String email);
+
+  void updatePassword(PasswordRequest passwordRequest);
 }
