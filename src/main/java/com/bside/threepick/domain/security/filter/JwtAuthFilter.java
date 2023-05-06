@@ -1,5 +1,7 @@
 package com.bside.threepick.domain.security.filter;
 
+import static org.springframework.util.StringUtils.hasText;
+
 import com.bside.threepick.domain.security.service.TokenService;
 import com.bside.threepick.domain.security.user.ThreePickUserDetails;
 import java.io.IOException;
@@ -28,8 +30,11 @@ public class JwtAuthFilter extends GenericFilterBean {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
     String token = ((HttpServletRequest) request).getHeader(HttpHeaders.AUTHORIZATION);
+    if (hasText(token)) {
+      token = token.replace("Bearer ", "");
+    }
 
-    if (token != null && tokenService.verifyToken(token)) {
+    if (hasText(token) && tokenService.verifyToken(token)) {
       UserDetails userDetails = ThreePickUserDetails.builder()
           .accountId(tokenService.getAccountId(token))
           .username(tokenService.getSubject(token))

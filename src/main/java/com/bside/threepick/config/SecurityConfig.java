@@ -2,9 +2,11 @@ package com.bside.threepick.config;
 
 import com.bside.threepick.domain.account.reposiroty.AccountRepository;
 import com.bside.threepick.domain.security.filter.JwtAuthFilter;
+import com.bside.threepick.domain.security.filter.RequestBodyCachingFilter;
 import com.bside.threepick.domain.security.service.CustomOidcAccountService;
 import com.bside.threepick.domain.security.service.TokenService;
 import java.util.Arrays;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -25,10 +27,19 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
+  private static final String[] WHITELIST = {"/api/accounts/temp-password",
+      "/api/accounts/{email}/auth", "/api/accounts/{email}/auth-check", "/api/accounts"
+      , "/api/tokens/**", "/api/goals/**", "/api/retrospects/**",
+      "/swagger-ui.html", "/swagger/**", "/swagger-resources/**", "/swagger-ui/**", "/swagger-resources",
+      "/v2/api-docs", "/webjars/**", "/h2-console/**"};
   private final AccountRepository accountRepository;
   private final AuthenticationSuccessHandler customOAuth2SuccessHandler;
   private final TokenService tokenService;
   private final Environment env;
+
+  public static boolean isWhiteList(HttpServletRequest request) {
+    return Arrays.asList(WHITELIST).contains(request.getRequestURI());
+  }
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -55,9 +66,7 @@ public class SecurityConfig {
   private SecurityFilterChain setLocalMode(HttpSecurity http) throws Exception {
     http.authorizeRequests(
         author -> author
-            .antMatchers("/api/accounts/**", "/api/tokens/**", "/api/goals/**", "/api/retrospects/**",
-                "/swagger-ui.html", "/swagger/**", "/swagger-resources/**", "/swagger-ui/**", "/swagger-resources",
-                "/v2/api-docs", "/webjars/**", "/h2-console/**")
+            .antMatchers(WHITELIST)
             .permitAll()
             .anyRequest().authenticated());
     http.cors().configurationSource(corsConfigurationSource());
@@ -69,6 +78,7 @@ public class SecurityConfig {
         .userInfoEndpoint().oidcUserService(customOidcAccountService(accountRepository)));
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     http.addFilterBefore(new JwtAuthFilter(tokenService), OAuth2AuthorizationRequestRedirectFilter.class);
+    http.addFilterBefore(new RequestBodyCachingFilter(), JwtAuthFilter.class);
     return http.build();
   }
 
@@ -91,5 +101,4 @@ public class SecurityConfig {
     String profile = env.getActiveProfiles().length > 0 ? env.getActiveProfiles()[0] : "local";
     return profile.equals("local");
   }
-
 }
