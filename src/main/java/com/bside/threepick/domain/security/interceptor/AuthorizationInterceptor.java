@@ -29,9 +29,13 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
       Long accountId = userDetails.getAccountId();
       String email = userDetails.getUsername();
 
-      Map<String, String> requestMap = makeRequestMap(request);
-      String accountIdParam = requestMap.get("accountId");
-      String emailParam = requestMap.get("email");
+      String accountIdParam = request.getParameter("account-id");
+      String emailParam = request.getParameter("email");
+      if (accountIdParam == null && emailParam == null) {
+        Map<String, String> requestMap = makeRequestMap(request);
+        accountIdParam = requestMap.get("accountId");
+        emailParam = requestMap.get("email");
+      }
 
       if (accountIdParam != null && accountId == Long.parseLong(accountIdParam)) {
         return true;

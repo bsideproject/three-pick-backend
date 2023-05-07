@@ -8,7 +8,6 @@ import com.bside.threepick.domain.goal.entity.Goal;
 import com.bside.threepick.domain.goal.reposiroty.GoalRepository;
 import com.bside.threepick.domain.goal.validator.GoalValidator;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +49,7 @@ public class GoalMapperImpl implements GoalMapper {
 
     if (goalResponses.size() == 0) {
       Long timeValue = accountService.findAccountResponseById(accountId).getTimeValue();
-      return new GoalDayResponses(accountId, timeValue, new ArrayList<>());
+      return new GoalDayResponses(accountId, timeValue);
     }
     return new GoalDayResponses(accountId, goalResponses);
   }

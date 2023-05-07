@@ -1,5 +1,6 @@
 package com.bside.threepick.domain.goal.dto.response;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,13 +15,14 @@ public class GoalDayResponses {
   private Long accountId;
   private Long timeValue;
   private int totalValue;
+  private int missValue;
   private int doneValue;
   private List<GoalDayResponse> goalResponses;
 
-  public GoalDayResponses(Long accountId, Long timeValue, List<GoalDayResponse> goalResponses) {
+  public GoalDayResponses(Long accountId, Long timeValue) {
     this.accountId = accountId;
     this.timeValue = timeValue;
-    this.goalResponses = goalResponses;
+    this.goalResponses = new ArrayList<>();
   }
 
   public GoalDayResponses(Long accountId, List<GoalDayResponse> goalResponses) {
@@ -30,6 +32,7 @@ public class GoalDayResponses {
     this.goalResponses = goalResponses;
     this.totalValue = makeTotalValue();
     this.doneValue = makeDoneValue();
+    this.missValue = totalValue - doneValue;
   }
 
   private int makeDoneValue() {
