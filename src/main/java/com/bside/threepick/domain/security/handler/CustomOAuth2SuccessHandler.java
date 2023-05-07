@@ -5,7 +5,6 @@ import com.bside.threepick.domain.account.reposiroty.AccountRepository;
 import com.bside.threepick.domain.security.dto.response.Token;
 import com.bside.threepick.domain.security.service.TokenService;
 import com.bside.threepick.exception.EntityNotFoundException;
-import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-      Authentication authentication) throws IOException {
+      Authentication authentication) {
 
     String email = ((OAuth2User) authentication.getPrincipal()).getAttribute("email");
     Long accountId = accountRepository.findByEmail(email)

@@ -2,6 +2,8 @@ package com.bside.threepick.domain.account.entity;
 
 
 import com.bside.threepick.common.BaseEntity;
+import com.bside.threepick.common.ErrorCode;
+import com.bside.threepick.exception.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -89,7 +91,7 @@ public class Account extends BaseEntity {
   public void changeNextTimeValue(Long timeValue) {
     nextTimeValue = timeValue;
     nextTimeValueDate = LocalDate.now()
-        .plusDays(1l);
+        .plusDays(1L);
     changeCount++;
   }
 
@@ -114,6 +116,22 @@ public class Account extends BaseEntity {
       timeValue = nextTimeValue;
       nextTimeValue = 0L;
     }
+  }
+
+  public void changeTempPassword(String encodedPassword) {
+    this.password = encodedPassword;
+  }
+
+  public void changeNickName(String nickName) {
+    this.nickName = nickName;
+  }
+
+  public void changePassword(String newPassword) {
+    this.password = newPassword;
+  }
+
+  public void delete() {
+    this.status = AccountStatus.DELETE;
   }
 
   public Long getId() {
@@ -144,15 +162,18 @@ public class Account extends BaseEntity {
     return lastLoginDate;
   }
 
-  public LocalDate getNextTimeValueDate() {
-    return nextTimeValueDate;
-  }
-
   public boolean isCoachMark() {
     return coachMark;
   }
 
   public boolean isBasicOfSignUpType() {
     return signUpType == SignUpType.BASIC;
+  }
+
+  public boolean isDeletedThenThrow() {
+    if (this.status == AccountStatus.DELETE) {
+      throw new EntityNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND, "삭제 된 계정이에요. email: " + email);
+    }
+    return false;
   }
 }

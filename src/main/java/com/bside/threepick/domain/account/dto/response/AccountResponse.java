@@ -13,11 +13,13 @@ import lombok.NoArgsConstructor;
 @Data
 public class AccountResponse {
 
+  private Long accountId;
   private String email;
   private String nickName;
   private Long timeValue;
   private int changeCount;
   private boolean coachMark;
+  private GoalMonthResponse goalMonth;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
   private LocalDateTime lastLoginDate;
@@ -28,9 +30,20 @@ public class AccountResponse {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
   private LocalDateTime modifiedDate;
 
+  public AccountResponse(Account account, GoalMonthResponse goalMonthResponse) {
+    this.accountId = account.getId();
+    this.email = account.getEmail();
+    this.nickName = account.getNickName();
+    this.timeValue = account.getTimeValue();
+    this.changeCount = account.getChangeCount();
+    this.coachMark = account.isCoachMark();
+    this.goalMonth = goalMonthResponse;
+    this.lastLoginDate = account.getLastLoginDate();
+    this.createdDate = account.getCreatedDate();
+    this.modifiedDate = account.getModifiedDate();
+  }
+
   public static AccountResponse of(Account account) {
-    return new AccountResponse(account.getEmail(), account.getNickName(), account.getTimeValue(),
-        account.getChangeCount(), account.isCoachMark(), account.getLastLoginDate(), account.getCreatedDate(),
-        account.getModifiedDate());
+    return new AccountResponse(account, null);
   }
 }

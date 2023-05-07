@@ -27,9 +27,9 @@ public class Goal extends BaseEntity {
   @Column(name = "time_value", nullable = false, updatable = true)
   private Long timeValue;
 
-  @Column(name = "total_value", nullable = false, updatable = true)
+  @Column(name = "value", nullable = false, updatable = true)
   @Embedded
-  private TotalValue totalValue;
+  private Value value;
 
   @Column(name = "status", nullable = true, updatable = true)
   @Enumerated(EnumType.STRING)
@@ -41,7 +41,7 @@ public class Goal extends BaseEntity {
   @Column(name = "minute", nullable = false, updatable = true)
   private int minute;
 
-  @Column(name = "weight", nullable = false, updatable = true)
+  @Column(name = "weight", nullable = true, updatable = true)
   @Enumerated(EnumType.STRING)
   private Weight weight;
 
@@ -55,11 +55,21 @@ public class Goal extends BaseEntity {
   protected Goal() {
   }
 
+  public Goal(Long accountId, String content, Long timeValue, GoalType goalType) {
+    this.accountId = accountId;
+    this.content = content;
+    this.timeValue = timeValue;
+    this.value = new Value();
+    this.goalStatus = GoalStatus.DOING;
+    this.goalDate = LocalDate.now();
+    this.goalType = goalType;
+  }
+
   public Goal(Long accountId, String content, Long timeValue, int hour, int minute, Weight weight, GoalType goalType) {
     this.accountId = accountId;
     this.content = content;
     this.timeValue = timeValue;
-    this.totalValue = new TotalValue(hour, minute, timeValue, weight);
+    this.value = new Value(hour, minute, timeValue, weight);
     this.goalStatus = GoalStatus.DOING;
     this.hour = hour;
     this.minute = minute;
@@ -70,7 +80,7 @@ public class Goal extends BaseEntity {
 
   public void changeGoal(String content, GoalStatus goalStatus, int hour, int minute, Weight weight) {
     this.content = content;
-    this.totalValue = new TotalValue(hour, minute, timeValue, weight);
+    this.value = new Value(hour, minute, timeValue, weight);
     this.goalStatus = goalStatus;
     this.hour = hour;
     this.minute = minute;
@@ -85,12 +95,16 @@ public class Goal extends BaseEntity {
     return accountId;
   }
 
+  public Long getTimeValue() {
+    return timeValue;
+  }
+
   public String getContent() {
     return content;
   }
 
-  public TotalValue getTotalValue() {
-    return totalValue;
+  public Value getValue() {
+    return value;
   }
 
   public GoalStatus getGoalStatus() {
@@ -107,5 +121,13 @@ public class Goal extends BaseEntity {
 
   public Weight getWeight() {
     return weight;
+  }
+
+  public LocalDate getGoalDate() {
+    return goalDate;
+  }
+
+  public GoalType getGoalType() {
+    return goalType;
   }
 }

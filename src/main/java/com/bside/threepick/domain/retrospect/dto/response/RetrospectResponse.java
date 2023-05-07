@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RetrospectResponse {
 
-  private Long id;
+  private Long retrospectId;
   private Long accountId;
   private String content;
   private LocalDate retrospectDate;
@@ -33,7 +33,7 @@ public class RetrospectResponse {
   public static RetrospectResponse of(Retrospect retrospect) {
     return RetrospectResponse.builder()
         .accountId(retrospect.getAccountId())
-        .id(retrospect.getId())
+        .retrospectId(retrospect.getId())
         .content(retrospect.getContent())
         .retrospectDate(retrospect.getRetrospectDate())
         .createdDate(retrospect.getCreatedDate())
