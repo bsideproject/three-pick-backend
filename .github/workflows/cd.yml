@@ -48,21 +48,21 @@ jobs:
           cache-from: type=registry,ref=${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name:latest
           cache-to: type=inline
 
-  pull_deploy:
-    name: Connect server ssh and pull from container registry
-    runs-on: ubuntu-latest
-    steps:
-      - name: connect ssh
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.NCP_DEV_SERVER_IP }}
-          username: ${{ secrets.NCP_DEV_SERVER_USER }}
-          password: ${{ secrets.NCP_DEV_SERVER_PASSWORD }}
-          port: ${{ secrets.NCP_DEV_SERVER_PORT }}
-          script: |
-            docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name
-            docker stop $(docker ps -a -q)
-            docker rm $(docker ps -a -q)
-            docker run -d -p 8080:80 ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name
-            docker image prune -f
+## pull_deploy:
+##   name: Connect server ssh and pull from container registry
+##   runs-on: ubuntu-latest
+##   steps:
+##      - name: connect ssh
+##        uses: appleboy/ssh-action@master
+##        with:
+##          host: ${{ secrets.NCP_DEV_SERVER_IP }}
+##          username: ${{ secrets.NCP_DEV_SERVER_USER }}
+##          password: ${{ secrets.NCP_DEV_SERVER_PASSWORD }}
+##          port: ${{ secrets.NCP_DEV_SERVER_PORT }}
+##          script: |
+##            docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name
+##            docker stop $(docker ps -a -q)
+##            docker rm $(docker ps -a -q)
+##            docker run -d -p 8080:80 ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name
+##            docker image prune -f
 
