@@ -58,5 +58,5 @@ jobs:
             docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/three-pick
             docker stop $(docker ps -a -q)
             docker rm $(docker ps -a -q)
-            docker run -d -p 8080:80 ${{ secrets.NCP_CONTAINER_REGISTRY }}/three-pick
+            docker run -d -p 8090:80 ${{ secrets.NCP_CONTAINER_REGISTRY }}/three-pick
             docker image prune -f
