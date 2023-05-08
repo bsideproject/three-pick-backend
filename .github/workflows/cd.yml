@@ -55,8 +55,8 @@ jobs:
           password: ${{ secrets.NCP_DEV_SERVER_PASSWORD }}
           port: ${{ secrets.NCP_DEV_SERVER_PORT }}
           script: |
-            docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/three-pick
+            docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/three-pick:latest
             docker stop $(docker ps -a -q)
             docker rm $(docker ps -a -q)
-            docker run -d -p 8090:90 ${{ secrets.NCP_CONTAINER_REGISTRY }}/three-pick
+            docker run -d -p 8090:90 ${{ secrets.NCP_CONTAINER_REGISTRY }}/three-pick:latest
             docker image prune -f
