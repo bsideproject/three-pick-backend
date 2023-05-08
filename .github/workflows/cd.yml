@@ -55,7 +55,7 @@ jobs:
           password: ${{ secrets.NCP_DEV_SERVER_PASSWORD }}
           port: ${{ secrets.NCP_DEV_SERVER_PORT }}
           script: |
-            docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/tag-name
+            docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/three-pick
             docker stop $(docker ps -a -q)
             docker rm $(docker ps -a -q)
             docker run -d -p 8080:80 ${{ secrets.NCP_CONTAINER_REGISTRY }}/three-pick
